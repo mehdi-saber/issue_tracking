@@ -12,6 +12,10 @@ import java.util.Set;
 @Entity
 @Table(name = "subcategory_tbl")
 public class SubCategory {
+    public static final int PRIORITY_HIGH = 3;
+    public static final int PRIORITY_MEDIUM = 2;
+    public static final int PRIORITY_LOW = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
@@ -32,6 +36,9 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "created_by_user")
     User createdBy;
+
+    @Column(name = "priority",columnDefinition = "default 1")
+    int priority;
 
     public User getCreatedBy() {
         return createdBy;
@@ -71,5 +78,13 @@ public class SubCategory {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

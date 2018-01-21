@@ -194,25 +194,49 @@
 </header>
 
 <div class="atrocontent">
-    <div class="ui basic modal" style="text-align:center;">
-        <div class="ui icon header" style="border-bottom: none">
-            <i class="write icon"></i>
-            <span>Edit Category</span>
-        </div>
-        <div class="content">
-            <h3>Do you want to edit category?</h3>
-        </div>
-        <div class="actions" style="text-align: center;border-top: none">
-            <div class="ui inverted red basic cancel  button">
-                <i class="remove icon"></i>
-                No
+    <div th:if="${#locale.getLanguage().equals('fa')}">
+        <div class="ui basic modal" style="text-align:center;width: 100%">
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.categories.confirm.dialog.update.task.title}"></span>
             </div>
-            <div id="confirmSubmit" class="ui inverted green basic ok  button">
-                <i class="checkmark icon"></i>
-                Yes
+            <div class="content">
+                <h3><span th:text="#{admin.categories.confirm.dialog.content}"></span> </h3>
             </div>
-        </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                 <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
 
+        </div>
+    </div>
+    <div th:if="${#locale.getLanguage().equals('en')}">
+        <div class="ui basic modal" style="text-align:center">
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.categories.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content">
+                <h3><span th:text="#{admin.categories.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                    <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
+
+        </div>
     </div>
     <div class="ui centered grid">
         <div class="row">
@@ -329,8 +353,15 @@
                         </div>
                     </h3>
                     <div  class="ui raised segment" th:if="${selectedCategory!=null}" >
-                        <div class="ui black ribbon label" style="margin-bottom: 15px">
-                            <i class="icon browser"></i><span th:text="*{title}"></span>
+                        <div th:if="${#locale.getLanguage().equals('en')}">
+                            <div class="ui black ribbon label" style="margin-bottom: 15px">
+                                <i class="icon browser"></i><span th:text="*{title}"></span>
+                            </div>
+                        </div>
+                        <div th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="ui black ribbon label" style="margin-bottom: 15px">
+                               <span th:text="*{title}"></span> <i class="icon browser"></i>
+                            </div>
                         </div>
 
 
@@ -360,27 +391,70 @@
 
 
 
-                        <div class="field">
-                            <div class="ui multiple dropdown">
-                                <input type="hidden" th:field="${subCategory.tags}">
-                                <i class="filter icon"></i>
-                                <span class="text" th:text="#{admin.categories.filter.posts.title}"> </span>
-                                <div class="menu">
-                                    <div class="ui icon search input" style="display: table-cell;padding: 5px">
-                                        <i class="search icon"></i>
-                                        <input type="text" th:placeholder="#{admin.categories.subject.title.placeholder}">
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="header">
-                                        <i class="tags icon"></i>
-                                       <span th:text="#{admin.categories.tag.label.title}"></span>
-                                    </div>
-                                    <div class="scrolling menu">
-                                        <div class="item" th:each="tag: ${tags}" th:attr="data-value=${tag.id}" >
-                                            <i class="hashtag icon"></i>
-                                            <span th:text="${tag.name}"></span>
+                        <div class="two fields">
+                          <div class="field">
+                              <div class="ui multiple dropdown">
+                                  <input type="hidden" th:field="${subCategory.tags}">
+                                  <i class="filter icon"></i>
+                                  <span class="text" th:text="#{admin.categories.filter.posts.title}"> </span>
+                                  <div class="menu">
+                                      <div class="ui icon search input" style="display: table-cell;padding: 5px">
+                                          <i class="search icon"></i>
+                                          <input type="text" th:placeholder="#{admin.categories.subject.title.placeholder}">
+                                      </div>
+                                      <div class="divider"></div>
+                                      <div class="header">
+                                          <i class="tags icon"></i>
+                                          <span th:text="#{admin.categories.tag.label.title}"></span>
+                                      </div>
+                                      <div class="scrolling menu">
+                                          <div class="item" th:each="tag: ${tags}" th:attr="data-value=${tag.id}" >
+                                              <i class="hashtag icon"></i>
+                                              <span th:text="${tag.name}"></span>
+                                          </div>
+
+                                      </div>
+                                  </div>
+                              </div>
+
+                          </div>
+                            <div class="field">
+                                <label><span th:text="#{admin.tasks.priority.title}"></span> </label>
+                                <div class="ui selection dropdown" >
+                                    <input type="hidden" th:field="${subCategory.priority}" id="prioritySelect">
+                                    <div class="default text"><span th:text="#{admin.tasks.select.priority.title}"></span> </div>
+                                    <i class="dropdown icon"></i>
+                                    <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                                        <div class="item" data-value="3">
+                                            <div class="ui red empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.high.title}"></span>
+                                        </div>
+                                        <div class="item" data-value="2">
+                                            <div class="ui yellow empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                                        </div>
+                                        <div class="item" data-value="1">
+                                            <div class="ui olive empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.low.title}"></span>
                                         </div>
 
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                                        <div class="item" data-value="3">
+                                            <span th:text="#{admin.tasks.priority.high.title}"></span>
+                                            <div class="ui red empty circular horizontal label"></div>
+
+                                        </div>
+                                        <div class="item" data-value="2">
+                                            <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                                            <div class="ui yellow empty circular horizontal label"></div>
+
+                                        </div>
+                                        <div class="item" data-value="1">
+                                            <span th:text="#{admin.tasks.priority.low.title}"></span>
+                                            <div class="ui olive empty circular horizontal label"></div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>

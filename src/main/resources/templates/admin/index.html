@@ -6,12 +6,6 @@
     <title>Admin Page</title>
     <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
     <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
-
-</head>
-
-<body class="atro">
-<header class="atroheader">
-    <div th:include="admin/fragment/header :: menu"></div>
     <script>
         function handleSubmit() {
             $('#updateButton').click(function () {
@@ -72,7 +66,7 @@
                         $('#taskDetails').html(data);
                         $('.ui .dropdown').dropdown();
                         handleSubmit()
-addComment();
+                        addComment();
                     },
                     error: function (xhr, status) {
                         alert(status);
@@ -115,30 +109,60 @@ addComment();
 
         }
     </script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+
 </header>
 
 <div class="atrocontent">
-    <div class="ui basic modal" style="text-align:center;">
-        <div class="ui icon header" style="border-bottom: none">
-            <i class="write icon"></i>
-            <span>Update Task</span>
-        </div>
-        <div class="content">
-            <h3>Do you want to update task?</h3>
-        </div>
-        <div class="actions" style="text-align: center;border-top: none">
-            <div class="ui inverted red basic cancel  button">
-                <i class="remove icon"></i>
-                No
-            </div>
-            <div id="confirmSubmit" class="ui inverted green basic ok  button">
-                <i class="checkmark icon"></i>
-                Yes
-            </div>
-        </div>
 
+    <div th:if="${#locale.getLanguage().equals('fa')}">
+        <div class="ui centered center floated center aligned basic modal" style="width: 100%" >
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.index.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content" style="text-align:center;">
+                <h3><span th:text="#{admin.index.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                  <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                   <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
+
+        </div>
     </div>
+    <div th:if="${#locale.getLanguage().equals('en')}">
+        <div class="ui centered center floated center aligned basic modal"  >
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.index.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content" style="text-align:center;">
+                <h3><span th:text="#{admin.index.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                    <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
 
+        </div>
+    </div>
 
 
 
@@ -170,6 +194,19 @@ addComment();
                         <div class="field" th:fragment="subcategories" id="subcategories">
                             <label><span th:text="#{admin.index.subject.title}"></span> </label>
                             <span th:text="${task.subCategory.title}"></span>
+                        </div>
+                        <div class="two fields" th:if="${#locale.getLanguage().equals('en')}">
+                            <div class="field" >
+                                <label><span th:text="#{admin.index.title}"></span> </label>
+                                <span th:text="${task.title}"></span>
+                            </div>
+                        </div>
+                        <div class="two fields" th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="field"></div>
+                            <div class="field" >
+                                <label><span th:text="#{admin.index.title}"></span> </label>
+                                <span th:text="${task.title}"></span>
+                            </div>
                         </div>
                         <div class="field">
                             <label><span th:text="#{admin.index.description.title}"></span> </label>
@@ -346,6 +383,7 @@ addComment();
     <div class="row">
         <div class="one wide column"></div>
         <div class="four wide column">
+
             <h4 class="ui icon header" style="display: block">
 
                 <i class="frown icon"></i>
@@ -514,6 +552,7 @@ addComment();
 
 
             </div>
+
         </div>
         <div class="one wide column"></div>
     </div>

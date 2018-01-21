@@ -25,6 +25,10 @@ public class Task implements Serializable{
     @Column(name="id")
     private int id;
 
+    @Column(name = "title")
+    String title;
+
+
     @Column(name = "content")
     @NotEmpty(message = "*Please provide task content")
     private String content;
@@ -65,6 +69,14 @@ public class Task implements Serializable{
 
     public List<TaskComment> getComments() {
         return comments;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setComments(List<TaskComment> comments) {

@@ -175,27 +175,50 @@ var ur;
 </header>
 
 <div class="atrocontent">
-    <div class="ui basic modal" style="text-align:center;">
-        <div class="ui icon header" style="border-bottom: none">
-            <i class="write icon"></i>
-            <span>Edit Account</span>
-        </div>
-        <div class="content">
-            <h3>Do you want to edit account?</h3>
-        </div>
-        <div class="actions" style="text-align: center;border-top: none">
-            <div class="ui inverted red basic cancel  button">
-                <i class="remove icon"></i>
-                No
-            </div>
-            <div id="confirmSubmit" class="ui inverted green basic ok  button">
-                <i class="checkmark icon"></i>
-                Yes
-            </div>
-        </div>
+   <div th:if="${#locale.getLanguage().equals('fa')}">
+       <div class="ui basic modal" style="text-align:center;width: 100%">
+           <div class="ui icon header" style="border-bottom: none">
+               <i class="write icon"></i>
+               <span th:text="#{admin.account.confirm.dialog.update.task.title}"></span>
+           </div>
+           <div class="content">
+               <h3><span th:text="#{admin.account.confirm.dialog.content}"></span> </h3>
+           </div>
+           <div class="actions" style="text-align: center;border-top: none">
+               <div class="ui inverted red basic cancel  button">
+                   <i class="remove icon"></i>
+                   <span th:text="#{action.no}"></span>
+               </div>
+               <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                   <i class="checkmark icon"></i>
+                   <span th:text="#{action.yes}"></span>
+               </div>
+           </div>
 
+       </div>
+   </div>
+    <div th:if="${#locale.getLanguage().equals('en')}">
+        <div class="ui basic modal" style="text-align:center">
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.account.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content">
+                <h3><span th:text="#{admin.account.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                    <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
+
+        </div>
     </div>
-
         <div class="ui centered grid" th:if="${users!=null}">
             <div class="row">
                 <div class="three wide column"></div>
@@ -311,8 +334,15 @@ var ur;
                         </div>
                     </h3>
                     <div  class="ui raised segment"  >
-                        <div class="ui black ribbon label" style="margin-bottom: 15px">
-                            <i class="icon mail"></i><span th:text="*{email}"></span>
+                       <div th:if="${#locale.getLanguage().equals('en')}">
+                           <div class="ui black ribbon label" style="margin-bottom: 15px">
+                               <i class="icon mail"></i><span th:text="*{email}"></span>
+                           </div>
+                       </div>
+                        <div th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="ui black ribbon label" style="margin-bottom: 15px">
+                               <span th:text="*{email}"></span>  <i class="icon mail"></i>
+                            </div>
                         </div>
 
 

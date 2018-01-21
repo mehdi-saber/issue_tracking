@@ -115,7 +115,7 @@
 
 
                     <div class="content">
-                        <span th:text="#{admin.tags.create.tag.title}"></span>
+                        <span th:text="#{admin.tasks.create.task.title}"></span>
 
                     </div>
                 </h2>
@@ -145,6 +145,19 @@
                     </div>
                 </div>
             </div>
+        <div th:if="${#locale.getLanguage().equals('en')}" class="two fields">
+            <div class="field">
+                <label><span th:text="#{admin.tasks.title}"></span> </label>
+                <input th:placeholder="#{admin.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+            </div>
+        </div>
+        <div th:if="${#locale.getLanguage().equals('fa')}" class="two fields">
+            <div class="field"></div>
+            <div class="field">
+                <label><span th:text="#{admin.tasks.title}"></span> </label>
+                <input th:placeholder="#{admin.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+            </div>
+        </div>
         <div class="field">
             <label><span th:text="#{admin.tasks.description.title}"></span> </label>
             <textarea style="margin-top: 0px; margin-bottom: 0px; height: 112px;" id="description" th:field="*{content}"></textarea>
