@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+<script>
+
+    function handleSubmit() {
+        $('#updateButton').click(function () {
+            $('.ui.basic.modal')
+
+                .modal({
+                    blurring: true
+                })
+                .modal('show')
+            ;
+            $('#confirmSubmit').click(function () {
+                $('#userForm').submit();
+            })
+        })
+    }
+$(document).ready(function () {
+   hoverShow();
+})
+function hoverShow() {
+    $("#usersTable tbody tr").hover(
+        function () {
+            $(this).css("background","grey");
+            $(this).css("font-weight","bolder");
+            $(this).css("color","#DADADA");
+        },
+        function () {
+            $(this).css("background","");
+            $(this).css("font-weight","inherit");
+            $(this).css("color","");
+        }
+    );
+}
+    $(document).ready(function(){
+        $('.ui .dropdown').dropdown();
+
+    });
+
+    $(document).ready(function () {
+        $( "#userSearchBar" ).keyup(function() {
+            $("#pageNumber a").css("font-weight", "inherit");
+            $("#pageNumber a").css("color", "black");
+            /*var url = 'accounts/';
+
+            if ($('#userSearchBar').val() != '') {
+                url = url + '/' + $('#userSearchBar').val();
+                $("#usersTable").load(url);
+            }*/
+var ur;
+
+           if ($('#userSearchBar').val()!=''){
+               var res = $('#userSearchBar').val().replace(".", "+");
+              ur = "accounts/search="+res;
+
+           }else { ur = "accounts/page=1";
+               $('#page1').css("color", "green").css("font-weight", "bolder");
+
+           }
+            $.ajax({
+                url: ur,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    $('#usersTable').html(data)
+                    userDetailsAjax();
+                    hoverShow();
+                },
+                error: function (xhr, status) {
+                    alert("Sorry, there was a problem!");
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+
+                }
+            });
+
+        });
+
+
+
+    })
+
+    $(document).ready(function () {
+        $( "#pageNumber a" ).click(function() {
+
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+            $("#pageNumber a").css("font-weight", "inherit");
+            $("#pageNumber a").css("color", "black");
+            $(this).css("color", "green");
+            $(this).css("font-weight", "bolder");
+
+            $.ajax({
+                url: "accounts/page="+this.text,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    $('#usersTable').html(data)
+                    userDetailsAjax();
+                    hoverShow();
+                },
+                error: function (xhr, status) {
+                    alert("Sorry, there was a problem!");
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+                }
+            });
+
+
+
+        });
+    })
+
+    $(document).ready(function () {
+        userDetailsAjax();
+    })
+
+    function userDetailsAjax() {
+        $( "#usersTable tbody tr" ).click(function() {
+
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+
+            $.ajax({
+                url: "accounts/user="+this.id,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+
+                    $('#userDetails').html(data);
+                    $('.ui .dropdown').dropdown();
+                    handleSubmit();
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+                }
+            });
+
+
+
+        });
+    }
+
+
+</script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+<div class="atrocontent">
+    <div class="ui basic modal" style="text-align:center;">
+        <div class="ui icon header" style="border-bottom: none">
+            <i class="write icon"></i>
+            <span>Edit Account</span>
+        </div>
+        <div class="content">
+            <h3>Do you want to edit account?</h3>
+        </div>
+        <div class="actions" style="text-align: center;border-top: none">
+            <div class="ui inverted red basic cancel  button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                <i class="checkmark icon"></i>
+                Yes
+            </div>
+        </div>
+
+    </div>
+
+        <div class="ui centered grid" th:if="${users!=null}">
+            <div class="row">
+                <div class="three wide column"></div>
+
+                <div  class="ten wide column" >
+                    <h2 class="ui icon header" style="display: block">
+
+                        <i class="users icon"></i>
+
+
+                        <div class="content">
+                             <span th:text="#{admin.account.user.list.title}"></span>
+
+                        </div>
+                    </h2>
+
+                    <div class="ui raised piled segment">
+                    <div class="ui left icon input">
+                        <input type="text" id="userSearchBar" th:placeholder="#{admin.account.search.users.placeholder}" >
+                        <i class="users icon"></i>
+                    </div>
+                    <table th:fragment="resultsList" id="usersTable" class="ui striped table" >
+
+                        <thead>
+
+                        <tr><th><span th:text="#{admin.account.email.title}"></span>
+                          </th>
+                            <th><span th:text="#{admin.account.firstname.title}"></span> </th>
+                            <th><span th:text="#{admin.account.lastname.title}"></span> </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody >
+                        <tr  th:each="user:${users}" th:id="${user.id}" >
+
+                            <td th:if="${#locale.getLanguage().equals('en')}">
+                                <span th:text="${user.email}">
+
+                                </span>
+                                <i th:if="${!user.active}" class="ui lock icon"></i>
+                                <div th:each="role:${user.roles}" style="display: inline">
+                                    <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                    <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                    <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                    <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i>
+                                </div>
+                                <i th:if="${user.legal}" class="ui certificate icon"></i>
+                            </td>
+                            <td th:if="${#locale.getLanguage().equals('fa')}">
+
+                                <i th:if="${!user.active}" class="ui lock icon"></i>
+                                <div th:each="role:${user.roles}" style="display: inline">
+                                    <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                    <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                    <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                    <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i>
+                                </div>
+                                <i th:if="${user.legal}" class="ui certificate icon"></i>
+                                <span th:text="${user.email}">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${user.name}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${user.lastName}"></span>
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+                        <tfoot>
+
+                        </tr></tfoot>
+                    </table>
+                    <div >
+                        <div class="ui right floated pagination menu">
+                            <a class="icon item">
+                                <i class="left chevron icon"></i>
+                            </a>
+                            <div th:each="i : ${#numbers.sequence(0,pageNumbers)}" id="pageNumber">
+                                <a class="item" th:text="${i+1}"   ></a>
+
+                            </div>
+                            <a class="icon item">
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="three wide column"></div>
+            </div>
+        </div>
+
+    <div class="ui centered grid"  >
+        <div class="row">
+            <div class="three wide column"  ></div>
+            <div class="ten wide column" th:fragment="details" id="userDetails">
+
+                <form    class="ui form"  action="#"   id="userForm" th:if="${selectedUser!=null}"   th:action="@{accounts}" th:method="post"  th:object="${selectedUser}">
+                    <h3  class="ui icon header" style="display: block">
+
+                        <i class="user icon"></i>
+
+
+                        <div class="content">
+                            <span th:text="#{admin.account.user.details.title}"></span>
+
+                        </div>
+                    </h3>
+                    <div  class="ui raised segment"  >
+                        <div class="ui black ribbon label" style="margin-bottom: 15px">
+                            <i class="icon mail"></i><span th:text="*{email}"></span>
+                        </div>
+
+
+<div class="two fields">
+                        <div class="field">
+                            <label><span th:text="#{admin.account.firstname.title}"></span> </label>
+                            <span th:text="*{name}" ></span>
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.lastname.title}"></span> </label>
+                            <span th:text="*{lastName}"  ></span>
+                        </div>
+</div>
+
+
+
+
+                        <div class="two fields">
+                            <div class="field">
+
+                                <label><span th:text="#{admin.account.registration.date.title}"></span> </label>
+                                <span th:text="${selectedUser.registrationTime}"></span>
+
+
+                            </div>
+
+                            <div class="field">
+
+                                <label><span th:text="#{admin.account.created.by.title}"></span> </label>
+                                <span th:if="${selectedUser.createdBy!=null}" th:text="${selectedUser.createdBy.email}"></span>
+
+
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label><span th:text="#{admin.account.roles.title}"></span> </label>
+
+
+
+                            <div class="ui fluid multiple search selection dropdown" >
+                                <input type="hidden" th:field="*{roles}" id="roleSelector">
+                                <i class="dropdown icon"></i>
+                                <div class="default text"><span th:text="#{admin.account.selectRoles.title}"></span> </div>
+                                <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                                    <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+                                        <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                        <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                        <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                        <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i>
+                                        <span th:text="${role.role}"></span> </div>
+
+                                </div>
+                                <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                                    <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+
+                                        <span th:text="${role.role}"></span>
+                                        <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                        <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                        <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                        <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i></div>
+
+                                </div>
+                            </div>
+
+
+
+
+
+                        </div>
+
+
+
+                        <!-- ########### -->
+
+
+
+                        <div class="field">
+                            <div class="ui multiple dropdown">
+                                <input type="hidden" th:field="*{tags}">
+                                <i class="filter icon"></i>
+                                <span class="text"><span th:text="#{admin.account.filter.posts.title}"></span> </span>
+                                <div class="menu">
+                                    <div class="ui icon search input" style="display: table-cell;padding: 5px">
+                                        <i class="search icon"></i>
+                                        <input type="text" placeholder="Search tags...">
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="header">
+                                        <i class="tags icon"></i>
+                                        <span th:text="#{admin.account.tag.label.title}"></span>
+                                    </div>
+                                    <div class="scrolling menu">
+                                        <div class="item" th:each="tag: ${tags}" th:attr="data-value=${tag.id}" >
+                                            <i class="hashtag icon"></i>
+                                            <span th:text="${tag.name}"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- ########### -->
+
+                        <div class="three fields">
+                            <div class="field">
+
+                                <div class="ui toggle green checkbox">
+                                    <input type="checkbox" th:field="*{active}" >
+                                    <label><span th:text="#{admin.account.active.account.title}"></span> </label>
+                                </div>
+                            </div>
+                            <div class="field">
+
+                                <div class="ui toggle green checkbox">
+                                    <input type="checkbox" th:field="*{requiredToChangePassword}" >
+                                    <label><span th:text="#{admin.account.change.password.title}"></span> </label>
+                                </div>
+                            </div>
+                            <div class="field">
+
+                                <div class="ui toggle green checkbox">
+                                    <input type="checkbox" th:field="*{legal}" >
+                                    <label><span th:text="#{admin.account.legal.title}"></span> </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="updateButton" class="ui grey labeled icon  button">
+                            <i class="write icon"></i> <span th:text="#{admin.account.update.button.title}"></span> </div>
+                        <div class="ui olive message" th:if="${successMessage}!=null">
+                            <span th:utext="${successMessage}"></span>
+                        </div>
+
+                        <div class="ui error message"></div>
+
+
+
+
+
+                    </div>
+
+
+                </form>
+
+
+
+
+
+            </div>
+            <div class="three wide column"></div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>

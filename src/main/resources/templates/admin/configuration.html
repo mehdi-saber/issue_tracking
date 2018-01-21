@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>

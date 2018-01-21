@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<conf>
+
+    <url>
+        <server>http://</server>
+        <admin>
+            <home>/admin/index</home>
+        </admin>
+        <manager>
+            <home>/manager/index</home>
+        </manager>
+        <operator>
+            <home>/operator/index</home>
+        </operator>
+        <client>
+            <home>/client/index</home>
+        </client>
+        <login>/login</login>
+        <logout>/logout</logout>
+        <error>/error</error>
+        <register>/registration</register>
+        <access-denied>/access-denied</access-denied>
+
+    </url>
+    <role>
+        <admin>ADMIN</admin>
+        <manager>MANAGER</manager>
+        <operator>OPERATOR</operator>
+        <client>CLIENT</client>
+    </role>
+</conf>

@@ -1,0 +1,91 @@
+
+
+
+
+
+
+
+.atro{
+    background-color: #DADADA;
+
+    min-height: 100vh;
+    flex-direction: column;
+}
+.atrocontent{
+    flex: 1;
+}
+.atroheader #headermenu{
+    background-color: black;
+}
+.atroheader #toolbar{
+    background-color: lightgray;
+}
+.atrofooter{
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+.atrofooter #footerCopyright{
+
+}
+
+.social{
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    padding: 0px;
+    font-size: 28px;
+
+}
+.atrolabel{
+    padding: 1px;
+    position: absolute;
+    z-index: 100;
+    top: 0.1em;
+    left: 95%;
+    margin: 0 0 0 -1.5em!important;
+    background-color: #db2828!important;
+    border-color: #db2828!important;
+    color: white!important;
+    font-size: .85714286rem;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: baseline;
+    text-transform: none;
+    font-weight: 700;
+    border-radius: 10%;
+    transition: background .1s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+.highlight {
+    font-weight: bold;
+    color: green;
+}
+
+.hoverflash  {
+    opacity: 1;
+    -webkit-animation: flash 1.5s;
+    animation: flash 1.5s;
+}
+@-webkit-keyframes flash {
+    0% {
+        opacity: .4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes flash {
+    0% {
+        opacity: .4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+

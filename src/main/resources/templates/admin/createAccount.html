@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+
+
+<script>
+
+
+
+
+
+
+  $(document).ready(function(){
+      $('.ui .dropdown').dropdown()
+  })
+
+    $(document).ready(function () {
+        $('.ui.form')
+            .form({
+                fields:{
+                    firstName:{
+                        identifier: 'firstName',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter your name'
+                            }
+                        ]
+                    },
+                    lastName:{
+                        identifier:'lastName',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter your last name'
+                        }]
+                    },
+                    email:{
+                        identifier:'email',
+                        rules:[{
+                            type:'email',
+                            prompt:'Please enter valid email address'
+                        },
+                            {
+                                type:'empty',
+                                prompt:'Please enter email address'
+                            }]
+                    },
+                    password:{
+                        identifier:'password',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter password'
+                        },
+                            {
+                                type:'minLength[5]',
+                                prompt:'Your password must be at least {ruleValue} characters'
+                            }]
+                    },
+                    confirmPassword:{
+                        identifier:'confirmPassword',
+                        rules:[{
+                            type:'match[password]',
+                            prompt:'Passwords are not the same'
+
+                        }]
+                    },
+                    priority:{
+                        identifier:'priority',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select priority'
+                        }]
+                    },
+                    roleSelector:{
+                        identifier:'roleSelector',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select at least one role'
+                        }]
+                    }
+                }
+            })
+
+    })
+</script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+<div class="atrocontent">
+
+
+    <div class="ui centered grid">
+
+        <div class="row">
+            <div class="three wide column"></div>
+            <div class="ten wide column">
+
+                <h2 class="ui icon header" style="display: block">
+
+                        <i class="users icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{admin.account.create.user.title}"></span>
+
+                    </div>
+                </h2>
+
+                <div class="ui raised piled segment">
+                <form class="ui form" th:action="@{createAccount}" th:object="${user}" th:method="post">
+                    <div class="two fields">
+                        <div class="field">
+                            <label><span th:text="#{admin.account.firstname.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.firstname.placeholder}" type="text" th:field="*{name}" id="firstName" >
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.lastname.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.lastname.placeholder}" type="text" id="lastName" th:field="*{lastName}">
+                        </div>
+                    </div>
+
+                    <div class="field">
+
+                        <label><span th:text="#{admin.account.email.title}"></span> </label>
+                        <input type="email" th:placeholder="#{admin.account.email.placeholder}" id="email" th:field="*{email}">
+                        <label style="color:red;"
+                                th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                class="validation-message"></label>
+
+
+                    </div>
+
+
+                    <div class="two fields">
+                        <div class="field">
+                            <label><span th:text="#{admin.account.password.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.password.placeholder}" type="password" id="password" th:field="*{password}">
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.confirmPassword.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.confirmPassword.placeholder}" type="password" id="confirmPassword">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label><span th:text="#{admin.account.roles.title}"></span> </label>
+                        <div class="ui fluid multiple search selection dropdown" >
+                            <input type="hidden" th:field="*{roles}" id="roleSelector">
+                            <i class="dropdown icon"></i>
+                            <div class="default text"><span th:text="#{admin.account.selectRoles.title}"></span> </div>
+                            <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                                <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+                                    <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                    <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                    <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                    <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i>
+                                    <span th:text="${role.role}"></span> </div>
+
+                            </div>
+                            <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                                <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+
+                                    <span th:text="${role.role}"></span>
+                                    <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                    <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                    <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                    <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+
+                            <div class="ui toggle green checkbox">
+                                <input type="checkbox"  id="isActive" th:field="*{active}">
+                                <label><span th:text="#{admin.account.active.account.title}"></span> </label>
+                            </div>
+                        </div>
+                        <div class="field">
+
+                            <div class="ui toggle green checkbox">
+                                <input type="checkbox"  id="isLegal" th:field="*{legal}">
+                                <label><span th:text="#{admin.account.legal.title}"></span> </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ui grey labeled icon submit button">
+                        <i class="add icon"></i> <span th:text="#{admin.account.create.button.title}"></span> </div>
+                   <div class="ui olive message" th:if="${successMessage}!=null">
+                      <span th:utext="${successMessage}"></span>
+                   </div>
+
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            </div>
+            <div class="three wide column"></div>
+        </div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<footer class="atrofooter"  th:include="admin/fragment/footer :: footer"></footer>
+
+
+</body>
+</html>

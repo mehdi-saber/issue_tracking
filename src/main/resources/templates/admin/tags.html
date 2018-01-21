@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+<script>
+
+    $(document).ready(function () {
+        $('.ui.form')
+            .form({
+                fields:{
+                    tagName:{
+                        identifier: 'tagName',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter the tag name'
+                            }
+                        ]
+                    }
+                }
+            })
+
+    })
+</script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+<div class="atrocontent">
+    <div class="ui centered grid">
+        <div class="row">
+            <div class="four wide column"></div>
+            <div class="eight wide column">
+                <h2 class="ui icon header" style="display: block">
+
+                    <i class="tags icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{admin.tags.create.tag.title}"></span>
+
+                    </div>
+                </h2>
+                <div class="ui raised piled segment">
+                    <form class="ui form" th:object="${tag}" th:action="@{tags}" th:method="post" style="text-align: center">
+
+                        <div th:if="${#locale.getLanguage().equals('en')}">
+                            <div class="ui right labeled left icon input">
+                                <i class="tags icon"></i>
+                                <input type="text" th:placeholder="#{admin.tags.tag.name.placeholder}" id="tagName" name="tagName"  th:field="*{name}">
+                                <a class="ui tag label submit">
+                                    <span th:text="#{admin.tags.add.tag.button.title}"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="ui right labeled left icon input">
+                                <a class="ui tag label submit">
+                                    <span th:text="#{admin.tags.add.tag.button.title}"></span>
+                                </a>
+                                <i class="invisible tags icon"></i>
+                                <input type="text" th:placeholder="#{admin.tags.tag.name.placeholder}" id="tagName" name="tagName"  th:field="*{name}">
+
+                            </div>
+                        </div>
+                        <div class="ui error message"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="four wide column"></div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>
