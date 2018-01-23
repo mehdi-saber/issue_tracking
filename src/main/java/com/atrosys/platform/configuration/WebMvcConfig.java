@@ -1,6 +1,8 @@
 package com.atrosys.platform.configuration;
 
 import com.atrosys.platform.converter.UserListConverter;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -63,4 +65,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addFormatters (FormatterRegistry registry) {
         registry.addConverter(new UserListConverter());
     }
+
 }

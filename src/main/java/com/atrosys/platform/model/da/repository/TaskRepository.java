@@ -1,5 +1,6 @@
 package com.atrosys.platform.model.da.repository;
 
+import com.atrosys.platform.model.to.SubCategory;
 import com.atrosys.platform.model.to.Task;
 import com.atrosys.platform.model.to.User;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
@@ -14,6 +15,9 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
     Task findById(int id);
 
     List <Task> findByAssignTosContainsAndStatus(User user,int status);
+
+    List<Task> findByCreatedBy(User user);
+    List<Task> findByAssignTosIsNullAndSubCategory(SubCategory subCategory);
 
 
 }

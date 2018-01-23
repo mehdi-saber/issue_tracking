@@ -1,5 +1,6 @@
 package com.atrosys.platform.model.service;
 
+import com.atrosys.platform.model.to.Tag;
 import com.atrosys.platform.model.to.Task;
 import com.atrosys.platform.model.to.User;
 
@@ -14,5 +15,7 @@ public interface TaskService {
     List<Task> findAllPendingTasksByUser(User user);
     List<Task> findAllWorkingTasksByUser(User user);
     List<Task> findAllDoneTasksByUser(User user);
+    List<Task> findAllByCreator(User user);
+    List<Task> findAllUnassignedByTags(List<Tag> tags);
 
 }

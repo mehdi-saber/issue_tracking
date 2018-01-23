@@ -59,6 +59,10 @@ public class Task implements Serializable{
     @Column(name = "progress_bar")
     int progressBar;
 
+    @Column(name = "attachment")
+    String attachment;
+
+
     @ManyToMany
     @JoinTable(name = "user_task", joinColumns = @JoinColumn(name = "fk_task"), inverseJoinColumns = @JoinColumn(name = "fk_user"))
     private List<User> assignTos;
@@ -66,6 +70,18 @@ public class Task implements Serializable{
     @ManyToMany
     @JoinTable(name = "task_comment", joinColumns = @JoinColumn(name = "fk_task"), inverseJoinColumns = @JoinColumn(name = "fk_comment"))
     private List<TaskComment> comments;
+
+    @OneToMany(mappedBy = "task")
+    List<TaskHistory> taskHistories;
+
+
+    public List<TaskHistory> getTaskHistories() {
+        return taskHistories;
+    }
+
+    public void setTaskHistories(List<TaskHistory> taskHistories) {
+        this.taskHistories = taskHistories;
+    }
 
     public List<TaskComment> getComments() {
         return comments;
@@ -169,5 +185,13 @@ public class Task implements Serializable{
 
     public void setProgressBar(int progressBar) {
         this.progressBar = progressBar;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
     }
 }

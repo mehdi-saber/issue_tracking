@@ -61,16 +61,7 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value="/client/index", method = RequestMethod.GET)
-    public ModelAndView clientHome(){
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByEmail(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("clientMessage","Content Available Only for Users with Client Role");
-        modelAndView.setViewName("client/index");
-        return modelAndView;
-    }
+
     @RequestMapping(value = "/something")
     public ModelAndView something(){
         ModelAndView modelAndView = new ModelAndView();

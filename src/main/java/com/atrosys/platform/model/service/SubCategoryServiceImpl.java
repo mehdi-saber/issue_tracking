@@ -3,6 +3,7 @@ package com.atrosys.platform.model.service;
 import com.atrosys.platform.model.da.repository.SubCategoryRepository;
 import com.atrosys.platform.model.to.Category;
 import com.atrosys.platform.model.to.SubCategory;
+import com.atrosys.platform.model.to.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,10 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     @Override
     public SubCategory findSubCategoryByTitle(String title) {
         return subCategoryRepository.findByTitle(title);
+    }
+
+    @Override
+    public List<SubCategory> findAllByTags(List<Tag> tags) {
+        return subCategoryRepository.findByTags(tags);
     }
 }
