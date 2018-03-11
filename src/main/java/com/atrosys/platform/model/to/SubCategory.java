@@ -37,8 +37,106 @@ public class SubCategory {
     @JoinColumn(name = "created_by_user")
     User createdBy;
 
-    @Column(name = "priority",columnDefinition = "default 1")
+    @Column(name = "priority")
     int priority;
+
+    @Column(name = "allowed_pending_minutes",columnDefinition = "int(6) default 0")
+    int allowedPendingMinutes;
+
+    @Column(name = "allowed_pending_hours",columnDefinition = "int(6) default 0")
+    int allowedPendingHours;
+
+    @Column(name = "allowed_pending_days",columnDefinition = "int(6) default 0")
+    int allowedPendingDays;
+
+    @Column(name = "allowed_working_minutes",columnDefinition = "int(6) default 0")
+    int allowedWorkingMinutes;
+
+    @Column(name = "allowed_working_hours",columnDefinition = "int(6) default 0")
+    int allowedWorkingHours;
+
+    @Column(name = "allowed_working_days",columnDefinition = "int(6) default 0")
+    int allowedWorkingDays;
+
+    @Column(name = "done_point",columnDefinition = "int(6) default 0")
+    int donePoint;
+    @Column(name = "reject_point",columnDefinition = "int(6) default 0")
+    int rejectPoint;
+    @Column(name = "too_late_point",columnDefinition = "int(6) default 0")
+    int tooLatePoint;
+
+
+    public int getAllowedPendingMinutes() {
+        return allowedPendingMinutes;
+    }
+
+    public void setAllowedPendingMinutes(int allowedPendingMinutes) {
+        this.allowedPendingMinutes = allowedPendingMinutes;
+    }
+
+    public int getAllowedPendingHours() {
+        return allowedPendingHours;
+    }
+
+    public void setAllowedPendingHours(int allowedPendingHours) {
+        this.allowedPendingHours = allowedPendingHours;
+    }
+
+    public int getAllowedPendingDays() {
+        return allowedPendingDays;
+    }
+
+    public void setAllowedPendingDays(int allowedPendingDays) {
+        this.allowedPendingDays = allowedPendingDays;
+    }
+
+    public int getAllowedWorkingMinutes() {
+        return allowedWorkingMinutes;
+    }
+
+    public void setAllowedWorkingMinutes(int allowedWorkingMinutes) {
+        this.allowedWorkingMinutes = allowedWorkingMinutes;
+    }
+
+    public int getAllowedWorkingHours() {
+        return allowedWorkingHours;
+    }
+
+    public void setAllowedWorkingHours(int allowedWorkingHours) {
+        this.allowedWorkingHours = allowedWorkingHours;
+    }
+
+    public int getAllowedWorkingDays() {
+        return allowedWorkingDays;
+    }
+
+    public void setAllowedWorkingDays(int allowedWorkingDays) {
+        this.allowedWorkingDays = allowedWorkingDays;
+    }
+
+    public int getDonePoint() {
+        return donePoint;
+    }
+
+    public void setDonePoint(int donePoint) {
+        this.donePoint = donePoint;
+    }
+
+    public int getRejectPoint() {
+        return rejectPoint;
+    }
+
+    public void setRejectPoint(int rejectPoint) {
+        this.rejectPoint = rejectPoint;
+    }
+
+    public int getTooLatePoint() {
+        return tooLatePoint;
+    }
+
+    public void setTooLatePoint(int tooLatePoint) {
+        this.tooLatePoint = tooLatePoint;
+    }
 
     public User getCreatedBy() {
         return createdBy;

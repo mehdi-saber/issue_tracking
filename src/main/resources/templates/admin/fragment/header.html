@@ -15,9 +15,7 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
     <script th:src="@{/semantic/dist/semantic.min.js}"></script>
-    <style type="text/css">
 
-    </style>
 </div>
 
 <div th:fragment="header_fa">
@@ -112,7 +110,7 @@
                </div>
            </div>
        </div>
-       <div style="text-align: right;margin-bottom: 25px" id="toolbar" >
+    <!--   <div style="text-align: right;margin-bottom: 25px" id="toolbar" >
            <div class="ui borderless menu" style="background: transparent;border: none;border-radius: 0px">
                <a class="item" style="padding: 5px">
                    <i class="icon mail"></i>
@@ -121,7 +119,7 @@
 
            </div>
 
-       </div>
+       </div>-->
    </div>
     <div th:if="${#locale.getLanguage().equals('fa')}">
         <div  class="ui inverted segment" id="headermenu" style="margin-bottom: 0px;border: none;border-radius: 0px">
@@ -183,15 +181,6 @@
                 </div>
             </div>
         </div>
-        <div style="text-align: right;margin-bottom: 25px" id="toolbar" >
-            <div class="ui borderless menu" style="background: transparent;border: none;border-radius: 0px">
-                <a class="item" style="padding: 5px">
-                    <i class="icon mail"></i>
-                    <div class="atrolabel"></div>
-                </a>
-
-            </div>
-
-        </div>
+    
     </div>
 </div>

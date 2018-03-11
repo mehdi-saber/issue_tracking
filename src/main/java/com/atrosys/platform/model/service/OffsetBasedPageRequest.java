@@ -2,10 +2,10 @@ package com.atrosys.platform.model.service;
 
 /**
  * Created by asgari on 1/8/18.
- */import org.apache.commons.lang3.builder.EqualsBuilder;
+ */
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.domain.AbstractPageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -40,6 +40,7 @@ public class OffsetBasedPageRequest implements Pageable, Serializable {
         this.limit = limit;
         this.offset = offset;
         this.sort = sort;
+
     }
 
     /**

@@ -7,6 +7,29 @@
     <div th:if="${#locale.getLanguage().equals('fa')}" th:include="operator/fragment/header :: header_fa"></div>
     <div th:if="${#locale.getLanguage().equals('en')}" th:include="operator/fragment/header :: header"></div>
     <script>
+        var stompClient = null;
+
+        function showGreeting(message) {
+            $.ajax({
+                url: "index/getNewTask",
+
+                type: "POST",
+                dataType: "html",
+                success: function (data) {
+
+                    $('#unAssignedSection').html(data);
+                    showTaskDetails();
+
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                },
+                complete: function (xhr, status) {
+
+                }
+            });
+        }
         function handleSubmit() {
             $('#updateButton').click(function () {
                 $('.ui.basic.modal')
@@ -21,8 +44,20 @@
                 })
             })
         }
+$(document).ready(function () {
+    var socket = new SockJS('/socket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
 
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            showGreeting(JSON.parse(greeting.body).content);
+        });
+    });
+
+})
         $(document).ready(function () {
+
             $('.ui .dropdown').dropdown();
             showTaskDetails();
             $('#sortby .menu .item').click(function () {
@@ -188,7 +223,7 @@
                         <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span> </h4>
 
                         <div class="field">
-                            <label><span th:text="#{operator.index.category.title}" </label>
+                            <label><span th:text="#{operator.index.category.title}"></span> </label>
                             <span th:text="${task.subCategory.category.title}"></span>
                         </div>
                         <div class="field" th:fragment="subcategories" id="subcategories">
@@ -202,14 +237,14 @@
                             </div>
 
                                 <div class="field">
-                                  <i class="attach icon" th:if="${task.attachment!=null}"></i>
+                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i class="attach icon" ></i> </a>
 
                                 </div>
 
                         </div>
                         <div class="two fields" th:if="${#locale.getLanguage().equals('fa')}">
                             <div class="field">
-                              <i class="attach icon" th:if="${task.attachment!=null}"></i>
+                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i class="attach icon" ></i> </a>
 
                             </div>
                             <div class="field" >
@@ -383,7 +418,7 @@
 
 
 
-    <div class="ui centered grid">
+    <div class="ui centered grid" >
         <div class="row" th:if="${#locale.getLanguage().equals('en')}">
 
            <div class="three wide column">
@@ -406,9 +441,9 @@
 
                    </div>
                </div>
-               <div  id="unAssignedSection" >
+               <div  id="unAssignedSection" th:fragment="unassignedFragmentEn"  >
                    <div class="ui centered link cards" th:if="${!unassignedTasks.isEmpty()}">
-                       <div class="card" th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
+                       <div class="card"  th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
 
                            <div class="content">
                                <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
@@ -462,7 +497,7 @@
 
                    </div>
                </div>
-               <div th:fragment="pendingSection" id="pendingSection" >
+               <div th:fragment="pendingFragmentEn" id="pendingSection" >
                    <div class="ui centered link cards" th:if="${!pendingTasks.isEmpty()}">
                        <div class="card" th:each="pendingTask:${pendingTasks}" th:id="${pendingTask.id}">
 
@@ -757,7 +792,7 @@
 
                     </div>
                 </div>
-                <div th:fragment="pendingSection" id="pendingSection" >
+                <div th:fragment="pendingFragmentFa" id="pendingSection" >
                     <div class="ui centered link cards" th:if="${!pendingTasks.isEmpty()}">
                         <div class="card" th:each="pendingTask:${pendingTasks}" th:id="${pendingTask.id}">
 
@@ -813,9 +848,9 @@
 
                     </div>
                 </div>
-                <div  id="unAssignedSection" >
+                <div  id="unAssignedSection" th:fragment="unassignedFragmentFa">
                     <div class="ui centered link cards" th:if="${!unassignedTasks.isEmpty()}">
-                        <div class="card" th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
+                        <div class="card"  th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
 
                             <div class="content">
                                 <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>

@@ -13,7 +13,20 @@
       <script th:src="@{/js/jquery-clockpicker.js}"></script>-->
 
     <script>
+        var stompClient = null;
+
         $(document).ready(function () {
+
+            var socket = new SockJS('/socket');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/greetings', function (greeting) {
+
+                });
+            });
+
             $('#tasksMenu .item')
                 .tab()
             ;
@@ -134,7 +147,7 @@
                     </div>
                 </h2>
                 <div class="ui raised piled segment">
-                    <form class="ui form" th:action="@{index}" th:method="post" th:object="${task}" enctype="multipart/form-data">
+                    <form class="ui form" th:action="@{index}" th:method="post" th:object="${task}" enctype="multipart/form-data" id="taskForm">
                         <h4 class="ui dividing header"><span th:text="#{client.tasks.task.information.title}"></span> </h4>
 
                         <div class="field">

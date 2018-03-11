@@ -17,4 +17,5 @@ public interface UserService {
     User findUserById(int id);
     void updateUser(User user);
     List<User> findActiveUsersExceptClients();
+
 }

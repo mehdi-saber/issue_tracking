@@ -74,4 +74,6 @@ public class UserServiceImpl implements UserService{
     public List<User> findActiveUsersExceptClients() {
         return userRepository.findByActiveTrueAndRolesNotContains(roleRepository.findByRole("CLIENT"));
     }
+
+
 }

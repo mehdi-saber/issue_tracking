@@ -72,6 +72,11 @@
            Email or Password invalid, please verify
 
         </div>
+        <div class="ui error message" th:if="${param.status}">
+
+           Your working day is finished. Go to rest
+
+        </div>
         <div class="ui message">
             New to us? <a th:href="@{/registration}">Sign Up</a>
         </div>

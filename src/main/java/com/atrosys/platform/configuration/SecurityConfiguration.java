@@ -60,7 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/manager/**").hasAuthority(Constants.ROLE_MANAGER)
                 .antMatchers("/operator/**").hasAuthority(Constants.ROLE_OPERATOR)
                 .antMatchers("/admin/**").hasAuthority(Constants.ROLE_ADMIN)
-                .antMatchers("/client/**").hasAuthority(Constants.ROLE_CLIENT).anyRequest()
+                .antMatchers("/client/**").hasAuthority(Constants.ROLE_CLIENT).
+                antMatchers("/change/**").hasAnyAuthority("CHANGE").anyRequest()
 
                 .authenticated().and().csrf().disable().formLogin().successHandler(roleTracker)
                 .loginPage("/login").failureUrl("/login?error=true")

@@ -43,6 +43,12 @@ public class User {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "anytime_access",columnDefinition = "bit(1) default false")
+    private boolean anytimeAccess;
+
+    @Column(name = "score",columnDefinition = "INT(11) default 0 ")
+    private int score;
+
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "fk_user"), inverseJoinColumns = @JoinColumn(name = "fk_role"))
     private List<Role> roles;
@@ -51,11 +57,14 @@ public class User {
     @JoinTable(name = "user_tag", joinColumns = @JoinColumn(name = "fk_user"), inverseJoinColumns = @JoinColumn(name = "fk_tag"))
     private List<Tag> tags;
 
+    @OneToMany(mappedBy = "user")
+    List<Days> days;
+
     @ManyToMany
     @JoinTable(name = "user_task", joinColumns = @JoinColumn(name = "fk_user"), inverseJoinColumns = @JoinColumn(name = "fk_task"))
     private List<Task> tasks;
 
-    @Column(name = "level")
+    @Column(name = "level",columnDefinition = "INT(2) default 0")
     private int level;
 
     @Column(name = "registration_time")
@@ -72,11 +81,19 @@ public class User {
     @JoinColumn(name = "created_by_user")
     User createdBy;
 
-    @Column(name = "required_change_pass")
+    @Column(name = "required_change_pass",columnDefinition = "BIT(1) default 0")
     boolean requiredToChangePassword;
 
-    @Column(name = "is_legal")
+    @Column(name = "is_legal",columnDefinition = "BIT(1) default 0")
     boolean legal;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public boolean isLegal() {
         return legal;
@@ -92,6 +109,22 @@ public class User {
 
     public void setRequiredToChangePassword(boolean requiredToChangePassword) {
         this.requiredToChangePassword = requiredToChangePassword;
+    }
+
+    public boolean isAnytimeAccess() {
+        return anytimeAccess;
+    }
+
+    public void setAnytimeAccess(boolean anytimeAccess) {
+        this.anytimeAccess = anytimeAccess;
+    }
+
+    public List<Days> getDays() {
+        return days;
+    }
+
+    public void setDays(List<Days> days) {
+        this.days = days;
     }
 
     public int getId() {

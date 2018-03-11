@@ -1,11 +1,13 @@
 package com.atrosys.platform.configuration;
-
 import com.atrosys.platform.converter.UserListConverter;
-
-import org.springframework.boot.CommandLineRunner;
+import com.atrosys.platform.model.bl.UserManager;
+import com.atrosys.platform.model.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -21,7 +23,19 @@ import java.util.Locale;
 
 
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
-
+    @Bean
+    Stopwatch stopwatch(){return new Stopwatch();}
+    @Bean
+    UserService userService(){
+        return new UserServiceImpl();
+    }
+    @Bean public UserManager userManager(){
+        return new UserManager(userService(),daysService(),roleService(),taskService());
+    }
+    @Bean
+    DaysService daysService(){return new DaysServiceImpl();}
+@Bean RoleService roleService(){return new RoleServiceImpl();}
+@Bean TaskService taskService(){return new TaskServiceImpl();}
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
 
@@ -30,7 +44,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Bean
     public LocaleResolver localeResolver(){
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.US);
+        localeResolver.setDefaultLocale(Locale.forLanguageTag("fa"));
         return  localeResolver;
     }
     @Bean

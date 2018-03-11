@@ -5,7 +5,8 @@ import com.atrosys.platform.util.Conf;
 /**
  * Created by asgari on 12/30/17.
  */
-public class Constants {
+public class
+Constants {
     // =============================
     // = ROLES
     // =============================
