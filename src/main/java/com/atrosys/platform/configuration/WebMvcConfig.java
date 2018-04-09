@@ -2,12 +2,14 @@ package com.atrosys.platform.configuration;
 import com.atrosys.platform.converter.UserListConverter;
 import com.atrosys.platform.model.bl.UserManager;
 import com.atrosys.platform.model.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.atrosys.platform.controller.ws.soap.client.SoapTest;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -23,8 +25,8 @@ import java.util.Locale;
 
 
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
-    @Bean
-    Stopwatch stopwatch(){return new Stopwatch();}
+
+
     @Bean
     UserService userService(){
         return new UserServiceImpl();
@@ -46,6 +48,21 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(Locale.forLanguageTag("fa"));
         return  localeResolver;
+    }
+    @Bean
+    public Scheduler scheduler(){
+        SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
+
+        Scheduler sched = null;
+        try {
+            sched = schedFact.getScheduler();
+            sched.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
+
+        return sched;
     }
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
@@ -79,5 +96,21 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addFormatters (FormatterRegistry registry) {
         registry.addConverter(new UserListConverter());
     }
+    @Bean
+    public Jaxb2Marshaller marshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        // this package must match the package in the <generatePackage> specified in
+        // pom.xml
+        marshaller.setContextPath("soap.wsdl");
+        return marshaller;
+    }
 
+    @Bean
+    public SoapTest soapTest(Jaxb2Marshaller marshaller) {
+        SoapTest client = new SoapTest();
+        client.setDefaultUri("http://www.webservicex.com/stockquote.asmx");
+        client.setMarshaller(marshaller);
+        client.setUnmarshaller(marshaller);
+        return client;
+    }
 }

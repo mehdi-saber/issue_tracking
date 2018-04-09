@@ -65,6 +65,16 @@ public class SubCategory {
     @Column(name = "too_late_point",columnDefinition = "int(6) default 0")
     int tooLatePoint;
 
+    @Column(name = "bonus_point",columnDefinition = "int(6) default 0")
+    int bonusPoint;
+
+    public int getBonusPoint() {
+        return bonusPoint;
+    }
+
+    public void setBonusPoint(int bonusPoint) {
+        this.bonusPoint = bonusPoint;
+    }
 
     public int getAllowedPendingMinutes() {
         return allowedPendingMinutes;

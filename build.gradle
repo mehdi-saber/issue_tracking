@@ -1,3 +1,8 @@
+configurations {
+	jaxb
+}
+
+
 buildscript {
 	ext {
 		springBootVersion = '1.5.9.RELEASE'
@@ -14,7 +19,7 @@ apply plugin: 'war'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
-
+apply plugin: 'io.spring.dependency-management'
 
 group = 'com.atrosys.platform'
 version = '0.0.1'
@@ -26,7 +31,44 @@ repositories {
 	mavenCentral()
 
 }
+// tag::wsdl[]
+task genJaxb {
+	ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+	ext.classesDir = "${buildDir}/classes/jaxb"
+	ext.schema = "http://www.webservicex.net/fax.asmx?WSDL"
 
+	outputs.dir classesDir
+
+	doLast() {
+		project.ant {
+			taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+					classpath: configurations.jaxb.asPath
+			mkdir(dir: sourcesDir)
+			mkdir(dir: classesDir)
+
+			xjc(destdir: sourcesDir, schema: schema,
+					package: "soap.wsdl") {
+				arg(value: "-wsdl")
+				produces(dir: sourcesDir, includes: "**/*.java")
+			}
+
+			javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+					debugLevel: "lines,vars,source",
+					classpath: configurations.jaxb.asPath) {
+				src(path: sourcesDir)
+				include(name: "**/*.java")
+				include(name: "*.java")
+			}
+
+			copy(todir: classesDir) {
+				fileset(dir: sourcesDir, erroronmissingdir: false) {
+					exclude(name: "**/*.java")
+				}
+			}
+		}
+	}
+}
+// end::wsdl[]
 dependencies {
 	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.2.1'
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -36,6 +78,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile('org.springframework.boot:spring-boot-starter-websocket')
+	compile('org.springframework.boot:spring-boot-starter-web-services')
 	compile("org.aspectj:aspectjweaver:1.8.8")
 	compile files('/lib/commons-lang3-3.0.jar')
 	runtime('mysql:mysql-connector-java')
@@ -43,4 +86,17 @@ dependencies {
 	testCompile('org.springframework.security:spring-security-test')
 	compile("org.springframework.boot:spring-boot-starter-tomcat")
 	runtime 'net.sourceforge.nekohtml:nekohtml:1.9.15'
+
+	compile(files(genJaxb.classesDir).builtBy(genJaxb))
+
+	jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
 }
+
+
+
+task afterEclipseImport {
+	dependsOn genJaxb
+}
+
+
+

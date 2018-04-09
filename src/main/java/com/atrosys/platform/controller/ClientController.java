@@ -1,12 +1,14 @@
 package com.atrosys.platform.controller;
 
-import com.atrosys.platform.configuration.Stopwatch;
+import com.atrosys.platform.TestJob;
 import com.atrosys.platform.model.bl.UserManager;
 import com.atrosys.platform.model.service.*;
 import com.atrosys.platform.model.to.Task;
 import com.atrosys.platform.model.to.TaskHistory;
 import com.atrosys.platform.model.to.User;
 import com.atrosys.platform.storage.StorageService;
+import com.atrosys.platform.util.DateUtil;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Created by asgari on 1/22/18.
@@ -38,6 +43,8 @@ public class ClientController {
     TaskHistoryService taskHistoryService;
     @Autowired
     UserManager userManager;
+    @Autowired
+    Scheduler scheduler;
     private final StorageService storageService;
 
     @Autowired
@@ -49,11 +56,10 @@ public class ClientController {
         this.messagingTemplate = messagingTemplate;
     }
 
-@Autowired
-Stopwatch stopwatch;
+
     @RequestMapping(value="/client/index", method = RequestMethod.GET)
     public ModelAndView clientHome(){
-        stopwatch.testForCountDownTasks();
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user =userManager.getCurrentUser(SecurityContextHolder.getContext());
         ModelAndView view = new ModelAndView();
@@ -165,6 +171,30 @@ String fileName = name+task.getId()+type;
         view.addObject("task",new Task());
         view.setViewName("redirect:/client/index");
         messagingTemplate.convertAndSend("/topic/greetings", 1);
+
+JobDataMap map =  new JobDataMap();
+map.put("taskService",taskService);
+        // define the job and tie it to our HelloJob class
+        JobDetail job = newJob(TestJob.class)
+                .withIdentity("Job"+task.getId(), "group"+task.getId())
+                .usingJobData("id", task.getId())
+                .usingJobData(map)
+                .build();
+
+        // Trigger the job to run now, and then every 40 seconds
+        Trigger trigger = newTrigger()
+                .withIdentity("Trigger"+task.getId(), "group"+task.getId())
+                .startAt(DateUtil.moveToDateFromCurrentDate(0,0,1).getTime())
+
+                .build();
+        // Tell quartz to schedule the job using our trigger
+        try {
+            scheduler.scheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
+
         return view;
     }
 }
