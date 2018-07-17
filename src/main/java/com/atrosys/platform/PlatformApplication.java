@@ -49,10 +49,10 @@ public class PlatformApplication extends SpringBootServletInitializer implements
 			if (args.length > 0) {
 				ticker = args[0];
 			}
-			SendTextToFaxResponse response = quoteClient.getQuote(ticker);
+			/*SendTextToFaxResponse response = quoteClient.getQuote(ticker);
 
 
-			System.err.println(response.getSendTextToFaxResult());
+			System.err.println(response.getSendTextToFaxResult());*/
 		};
 
 	}
