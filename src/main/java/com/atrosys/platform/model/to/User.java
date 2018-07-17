@@ -40,6 +40,25 @@ public class User {
     @NotEmpty(message = "*Please provide your last name")
     private String lastName;
 
+    @Column(name = "father_name")
+    @NotEmpty(message = "*Please provide your father name")
+    private String fatherName;
+
+    @Column(name = "national_code")
+    @NotEmpty(message = "*Please provide your national code")
+    private String nationalCode;
+
+    @Column(name = "mobile")
+    @NotEmpty(message = "*Please provide your mobile")
+    private String mobile;
+
+    @Column(name = "phone1")
+    @NotEmpty(message = "*Please provide your phone1")
+    private String phone1;
+
+    @Column(name = "phone2")
+    private String phone2;
+
     @Column(name = "active")
     private boolean active;
 
@@ -239,4 +258,43 @@ public class User {
         this.createdBy = createdBy;
     }
 
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    public String getNationalCode() {
+        return nationalCode;
+    }
+
+    public void setNationalCode(String nationalCode) {
+        this.nationalCode = nationalCode;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getPhone1() {
+        return phone1;
+    }
+
+    public void setPhone1(String phone1) {
+        this.phone1 = phone1;
+    }
+
+    public String getPhone2() {
+        return phone2;
+    }
+
+    public void setPhone2(String phone2) {
+        this.phone2 = phone2;
+    }
 }

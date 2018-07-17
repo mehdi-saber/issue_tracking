@@ -19,6 +19,17 @@ public class Category {
     @NotEmpty(message = "*Please provide category title")
     private String title;
 
+    @Column(name = "en_title")
+    @NotEmpty(message = "*Please provide category english title")
+    private String enTitle;
+
+    @Column(name = "code")
+    @NotEmpty(message = "*Please provide code")
+    private String code;
+
+    @Column(name = "internal")
+    private boolean internal;
+
     @ManyToOne
     @JoinColumn(name = "created_by_user")
     User createdBy;
@@ -45,5 +56,29 @@ public class Category {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getEnTitle() {
+        return enTitle;
+    }
+
+    public void setEnTitle(String enTitle) {
+        this.enTitle = enTitle;
+    }
+
+    public boolean isInternal() {
+        return internal;
+    }
+
+    public void setInternal(boolean internal) {
+        this.internal = internal;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

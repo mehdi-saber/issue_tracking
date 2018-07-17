@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>    <span th:utext="${msg}"></span></h1>
+
+<br/>
+<h1 th:text="#{welcome.message}"></h1>
+
+<span th:text="#{language.change}"></span>:
+<select id="locales">
+    <option value=""></option>
+    <option value="en" th:text="#{lang.eng}"></option>
+    <option value="fa" th:text="#{lang.fa}"></option>
+</select>
+</body>
+</html>

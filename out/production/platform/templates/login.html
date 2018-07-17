@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>AtroSys</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/semantic/dist/semantic.min.css}">
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script th:src="@{/semantic/dist/semantic.min.js}"></script>
+
+
+    <style type="text/css">
+
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+
+</head>
+
+<body class="atro">
+
+
+
+<div class="ui middle aligned center aligned grid">
+    <div class="inverted color column">
+        <h2 class="ui black image header">
+            <img th:src="@{/img/leaf.png}" class="image">
+            <div class="content">
+                Log-in to your account
+            </div>
+        </h2>
+        <form class="ui large form" th:action="@{/login}" method="POST">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" id="email" name="email"  th:placeholder="Email">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password"  th:placeholder="Password" id="password" name="password">
+                    </div>
+                </div>
+
+                <button type="submit" name="submit" class="ui fluid large black submit button" value="Login" th:text="Login"></button>
+            </div>
+
+
+
+        </form>
+        <div class="ui error message" th:if="${param.error}">
+
+           Email or Password invalid, please verify
+
+        </div>
+        <div class="ui error message" th:if="${param.status}">
+
+           Your working day is finished. Go to rest
+
+        </div>
+        <div class="ui message">
+            New to us? <a th:href="@{/registration}">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

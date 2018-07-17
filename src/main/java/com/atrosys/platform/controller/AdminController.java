@@ -23,6 +23,8 @@ public class AdminController {
     private final TagService tagService;
     private final CategoryService categoryService;
     private final SubCategoryService subCategoryService;
+    private final SmsLevelService smsLevelService;
+    private final EmailLevelService emailLevelService;
 
     private final CommentService commentService;
 
@@ -35,7 +37,7 @@ public class AdminController {
     private final TaskService taskService;
 
     @Autowired
-    public AdminController(TaskService taskService, UserManager userManager, CommentService commentService, SubCategoryService subCategoryService, RoleService roleService, TagService tagService, CategoryService categoryService) {
+    public AdminController(TaskService taskService, UserManager userManager, CommentService commentService, SubCategoryService subCategoryService, RoleService roleService, TagService tagService, CategoryService categoryService, SmsLevelService smsLevelService, EmailLevelService emailLevelService) {
         this.taskService = taskService;
         this.userManager = userManager;
         this.commentService = commentService;
@@ -43,6 +45,8 @@ public class AdminController {
         this.roleService = roleService;
         this.tagService = tagService;
         this.categoryService = categoryService;
+        this.smsLevelService = smsLevelService;
+        this.emailLevelService = emailLevelService;
     }
 
 
@@ -166,6 +170,7 @@ view.addObject("accountSelected","active");
         view.setViewName("admin/categories :: categoryList");
         return view;
     }
+
     @RequestMapping(value = "admin/categories/search={search}")
     public ModelAndView searchCategories( @PathVariable("search") String search){
         ModelAndView view = new ModelAndView();
@@ -201,6 +206,26 @@ view.addObject("accountSelected","active");
     public ModelAndView configuration(){
         ModelAndView view = new ModelAndView();
         view.addObject("settingSelected","active");
+        return view;
+    }
+    @RequestMapping(value = "admin/smsLevel")
+    public ModelAndView smsLevel(){
+        ModelAndView view = new ModelAndView();
+        view.addObject("settingSelected","active");
+        view.addObject("smsLevel",new SmsLevel());
+        view.addObject("pageNumbers",smsLevelService.getSmsLevelsCount()/5);
+        view.addObject("smsLevels",smsLevelService.findAllSmsLevels());
+        view.addObject("roles",roleService.findAllRoles());
+        return view;
+    }
+    @RequestMapping(value = "admin/emailLevel")
+    public ModelAndView emailLevel(){
+        ModelAndView view = new ModelAndView();
+        view.addObject("settingSelected","active");
+        view.addObject("emailLevel",new EmailLevel());
+        view.addObject("pageNumbers",emailLevelService.getEmailLevelsCount()/5);
+        view.addObject("emailLevels",emailLevelService.findAllEmailLevels());
+        view.addObject("roles",roleService.findAllRoles());
         return view;
     }
     @RequestMapping(value = "admin/tasks")
@@ -272,6 +297,30 @@ view.addObject("accountSelected","active");
             view.setViewName("admin/createAccount");
 
         }
+        return view;
+    }
+    @RequestMapping(value = "admin/smsLevel", method = RequestMethod.POST)
+    public ModelAndView saveSmsLevel(@ModelAttribute SmsLevel smsLevel){
+        ModelAndView view = new ModelAndView();
+        smsLevelService.save(smsLevel);
+            view.addObject("successMessage", "Sms Level has been Added successfully");
+            view.addObject("smsLevel", new SmsLevel());
+            view.addObject("roles",roleService.findAllRoles());
+            view.addObject("smsLevels",smsLevelService.findAllSmsLevels());
+            view.setViewName("redirect:smsLevel");
+
+        return view;
+    }
+    @RequestMapping(value = "admin/emailLevel", method = RequestMethod.POST)
+    public ModelAndView saveEmailLevel(@ModelAttribute EmailLevel emailLevel){
+        ModelAndView view = new ModelAndView();
+        emailLevelService.save(emailLevel);
+        view.addObject("successMessage", "Email Level has been Added successfully");
+        view.addObject("emailLevel", new EmailLevel());
+        view.addObject("roles",roleService.findAllRoles());
+        view.addObject("emailLevels",emailLevelService.findAllEmailLevels());
+        view.setViewName("redirect:emailLevel");
+
         return view;
     }
     @RequestMapping(value="/admin/index", method = RequestMethod.GET)

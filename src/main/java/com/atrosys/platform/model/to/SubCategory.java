@@ -12,6 +12,8 @@ import java.util.Set;
 @Entity
 @Table(name = "subcategory_tbl")
 public class SubCategory {
+
+    public static final int PRIORITY_VERY_HIGH = 4;
     public static final int PRIORITY_HIGH = 3;
     public static final int PRIORITY_MEDIUM = 2;
     public static final int PRIORITY_LOW = 1;
@@ -25,6 +27,20 @@ public class SubCategory {
     @NotEmpty(message = "*Please provide subcategory title")
     private String title;
 
+    @Column(name = "en_title")
+    @NotEmpty(message = "*Please provide subcategory english title")
+    private String enTitle;
+
+    @Column(name = "internal")
+    private boolean internal;
+
+    @Column(name = "answer_time")
+    private String answerTime;
+
+    @Column(name = "code")
+    @NotEmpty(message = "*Please provide code")
+    private String code;
+
     @ManyToOne
     @JoinColumn(name = "fk_category")
     private Category category;
@@ -36,6 +52,14 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "created_by_user")
     User createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "sms_level")
+    SmsLevel smsLevel;
+
+    @ManyToOne
+    @JoinColumn(name = "email_level")
+    EmailLevel emailLevel;
 
     @Column(name = "priority")
     int priority;
@@ -194,5 +218,53 @@ public class SubCategory {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public String getEnTitle() {
+        return enTitle;
+    }
+
+    public void setEnTitle(String enTitle) {
+        this.enTitle = enTitle;
+    }
+
+    public boolean isInternal() {
+        return internal;
+    }
+
+    public void setInternal(boolean internal) {
+        this.internal = internal;
+    }
+
+    public String getAnswerTime() {
+        return answerTime;
+    }
+
+    public void setAnswerTime(String answerTime) {
+        this.answerTime = answerTime;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public SmsLevel getSmsLevel() {
+        return smsLevel;
+    }
+
+    public void setSmsLevel(SmsLevel smsLevel) {
+        this.smsLevel = smsLevel;
+    }
+
+    public EmailLevel getEmailLevel() {
+        return emailLevel;
+    }
+
+    public void setEmailLevel(EmailLevel emailLevel) {
+        this.emailLevel = emailLevel;
     }
 }

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+  <!--  <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-clockpicker.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jquery-clockpicker.min.css}">-->
+
+  <!--  <script th:src="@{/js/bootstrap-clockpicker.js}"></script>
+    <script th:src="@{/js/jquery-clockpicker.js}"></script>-->
+
+<script>
+    $(document).ready(function () {
+        $('.ui .dropdown').dropdown();
+
+        $('.ui.form')
+            .form({
+                fields:{
+                    description:{
+                        identifier: 'description',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter description'
+                            }
+                        ]
+                    },
+
+
+                    userSelect:{
+                        identifier:'userSelect',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select at least one user'
+                        }]
+                    },
+                    prioritySelect:{
+                        identifier:'prioritySelect',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select priority'
+                        }]
+                    },
+                    subcategorySelect:{
+                        identifier:'subcategorySelect',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select subject'
+                        }]
+                    },
+                    categorySelect:{
+                        identifier:'categorySelect',
+                        rules:[{
+                            type:'minCount[1]',
+                            prompt:'Please select category'
+                        }]
+                    }
+                }
+            })
+        subcategoriesAjax();
+    })
+    function subcategoriesAjax() {
+        $( "#categorySelect" ).change(function() {
+
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+
+            $.ajax({
+                url: "tasks/category="+$('#categorySelect').val(),
+
+                type: "POST",
+                dataType: "html",
+                success: function (data) {
+
+                    $('#subcategories').html(data);
+                    $('.ui .dropdown').dropdown();
+
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+                }
+            });
+
+
+
+        });
+    }
+</script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+<div class="atrocontent">
+    <div class="ui centered grid">
+        <div class="row">
+            <div class="three wide column"></div>
+            <div class="ten wide column">
+                <h2 class="ui icon header" style="display: block">
+
+                    <i class="tasks icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{admin.tasks.create.task.title}"></span>
+
+                    </div>
+                </h2>
+<div class="ui raised piled segment">
+    <form class="ui form" th:action="@{tasks}" th:method="post" th:object="${task}">
+        <h4 class="ui dividing header"><span th:text="#{admin.tasks.task.information.title}"></span> </h4>
+
+            <div class="field">
+                <label><span th:text="#{admin.tasks.category.title}"></span> </label>
+                <select class="ui fluid dropdown" id="categorySelect">
+                    <option value="" th:text="#{admin.tasks.category.placeholder}"></option>
+                    <option class="" th:each="category:${categories}" th:text="${category.title}" th:value="${{category}}" th:attr="data-value=${category.id}" th:id="${category.id}" ></option>
+
+
+                </select>
+            </div>
+            <div class="field" th:fragment="subcategories" id="subcategories">
+                <label><span th:text="#{admin.tasks.subject.title}"></span> </label>
+                <div class="ui fluid search selection dropdown" th:if="${subcategories!=null}">
+                    <input type="hidden" th:field="${task.subCategory}" id="subcategorySelect">
+                    <i class="dropdown icon"></i>
+                    <div class="default text"><span th:text="#{admin.tasks.select.subject.title}"></span> </div>
+                    <div class="menu">
+                        <div class="item" th:each="subcategory:${subcategories}" th:attr="data-value=${subcategory.id}"><span th:text="${subcategory.title}"></span> </div>
+
+
+                    </div>
+                </div>
+            </div>
+        <div th:if="${#locale.getLanguage().equals('en')}" class="two fields">
+            <div class="field">
+                <label><span th:text="#{admin.tasks.title}"></span> </label>
+                <input th:placeholder="#{admin.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+            </div>
+        </div>
+        <div th:if="${#locale.getLanguage().equals('fa')}" class="two fields">
+            <div class="field"></div>
+            <div class="field">
+                <label><span th:text="#{admin.tasks.title}"></span> </label>
+                <input th:placeholder="#{admin.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+            </div>
+        </div>
+        <div class="field">
+            <label><span th:text="#{admin.tasks.description.title}"></span> </label>
+            <textarea style="margin-top: 0px; margin-bottom: 0px; height: 112px;" id="description" th:field="*{content}"></textarea>
+        </div>
+
+<div class="four fields">
+    <div class="field">
+        <label><span th:text="#{admin.tasks.priority.title}"></span> </label>
+        <div class="ui selection dropdown" >
+            <input type="hidden" th:field="*{priority}" id="prioritySelect">
+            <div class="default text"><span th:text="#{admin.tasks.select.priority.title}"></span> </div>
+            <i class="dropdown icon"></i>
+            <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                <div class="item" data-value="3">
+                    <div class="ui red empty circular horizontal label"></div>
+                    <span th:text="#{admin.tasks.priority.high.title}"></span>
+                </div>
+                <div class="item" data-value="2">
+                    <div class="ui yellow empty circular horizontal label"></div>
+                   <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                </div>
+                <div class="item" data-value="1">
+                    <div class="ui olive empty circular horizontal label"></div>
+                <span th:text="#{admin.tasks.priority.low.title}"></span>
+                </div>
+
+            </div>
+            <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                <div class="item" data-value="3">
+                    <span th:text="#{admin.tasks.priority.high.title}"></span>
+                    <div class="ui red empty circular horizontal label"></div>
+
+                </div>
+                <div class="item" data-value="2">
+                    <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                    <div class="ui yellow empty circular horizontal label"></div>
+
+                </div>
+                <div class="item" data-value="1">
+                    <span th:text="#{admin.tasks.priority.low.title}"></span>
+                    <div class="ui olive empty circular horizontal label"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+        <div class="field">
+            <label><span th:text="#{admin.tasks.assign.to.title}"></span> </label>
+            <div class="ui fluid multiple search normal selection dropdown">
+                <input type="hidden" th:id="assignTo" name="assignTo"  id="userSelect">
+                <i class="dropdown icon"></i>
+                <div class="default text"><span th:text="#{admin.tasks.users.title}"></span> </div>
+                <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                    <div class="item" th:each="user:${users}" th:attr="data-value=${user.id}"><i class="user icon"></i><span th:text="${user.email}"></span> </div>
+
+
+                </div>
+                <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                    <div class="item" th:each="user:${users}" th:attr="data-value=${user.id}"><span th:text="${user.email}"></span> <i class="user icon"></i></div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="ui grey labeled icon submit button">
+            <i class="add icon"></i> <span th:text="#{admin.tasks.create.button.title}"></span> </div>
+        <div class="ui error message"></div>
+    </form>
+</div>
+            </div>
+            <div class="three wide column"></div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="header">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/semantic/dist/semantic.min.css}">
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script th:src="@{/semantic/dist/semantic.min.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+    <style type="text/css">
+
+    </style>
+</div>
+
+<div th:fragment="header_fa">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/semantic/dist/semantic.rtl.css}">
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script th:src="@{/semantic/dist/semantic.min.js}"></script>
+    <style type="text/css">
+        @font-face {
+            font-family: BYekan;
+            src: url("../font/BYekan.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            font-family: BYekan;
+        }
+
+    </style>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+</div>
+
+<div th:fragment="menu" >
+
+    <div th:if="${#locale.getLanguage().equals('en')}" style="margin-bottom: 25px">
+        <div  class="ui inverted segment" id="headermenu" style="margin-bottom: 0px;border: none;border-radius: 0px">
+            <div class="ui inverted secondary pointing menu">
+
+                <div class="left menu">
+
+
+                    <a href="/logout" class="item">
+                        <i class="icon sign out"></i><span th:text="#{logout}"></span>
+                    </a>
+
+
+
+
+                    <div class="ui simple dropdown item">
+                        <span th:text="#{language}"></span>  <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a class="item" href="?lang=en"><i class="us flag"></i>English</a>
+                            <a class="item" href="?lang=fa"><i class="ir flag"></i>فارسی</a>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="right menu">
+
+                    <a th:classappend="${homeSelected}" class="item"  th:href="@{index}" >
+                        <i class="home icon"></i>   <span th:text="#{admin.menu.home}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:if="${#locale.getLanguage().equals('fa')}" style="margin-bottom: 25px">
+        <div  class="ui inverted segment" id="headermenu" style="margin-bottom: 0px;border: none;border-radius: 0px">
+            <div class="ui inverted secondary pointing menu">
+
+                <div class="right menu">
+
+
+                    <a href="/logout" class="item">
+                        <i class="icon sign out"></i><span th:text="#{logout}"></span>
+                    </a>
+
+
+
+                    <div class="ui floating simple icon dropdown item">
+                        <i class="dropdown icon"></i>   <span th:text="#{language}"></span>
+                        <div class="menu">
+                            <a class="item" href="?lang=en">English<i class="us flag"></i></a>
+                            <a class="item" href="?lang=fa">فارسی<i class="ir flag"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu">
+
+                    <a th:classappend="${homeSelected}" class="item"  th:href="@{index}" >
+                        <span th:text="#{admin.menu.home}"></span>   <i class="home icon"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

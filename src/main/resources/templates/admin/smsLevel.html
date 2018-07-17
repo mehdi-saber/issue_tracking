@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+    <script>
+        $(document).ready(function(){
+            $('.ui .dropdown').dropdown()
+        })
+        $(document).ready(function () {
+            $('.ui.form')
+                .form({
+                    fields:{
+                        tagName:{
+                            identifier: 'smsLevel',
+                            rules:[
+                                {
+                                    type:'empty',
+                                    prompt: 'Please enter the title'
+                                }
+                            ]
+                        },
+                        roleSelector:{
+                            identifier:'roleSelector',
+                            rules:[{
+                                type:'minCount[1]',
+                                prompt:'Please select at least one role'
+                            }]
+                        }
+                    }
+                })
+
+        })
+    </script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+<div class="atrocontent">
+    <div class="ui centered grid">
+        <div class="row">
+            <div class="four wide column"></div>
+            <div class="eight wide column">
+                <h2 class="ui icon header" style="display: block">
+
+                    <i class="tags icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{admin.level.create.sms.level}"></span>
+                    </div>
+                </h2>
+                <div class="ui raised piled segment">
+                    <form class="ui form" th:object="${smsLevel}" th:action="@{smsLevel}" th:method="post" style="text-align: center">
+
+                        <div class="field">
+                            <div class="ui right labeled left icon input">
+                                <i class="invisible tags icon"></i>
+                                <input type="text" th:placeholder="#{admin.level.sms.name.placeholder}" id="smsLevel" name="smsLevel"  th:field="*{title}">
+
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.roles.title}"></span> </label>
+                            <div class="ui fluid multiple search selection dropdown" >
+                                <input type="hidden" th:field="*{roles}" id="roleSelector">
+                                <i class="dropdown icon"></i>
+                                <div class="default text"><span th:text="#{admin.account.selectRoles.title}"></span> </div>
+                                <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                                    <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+                                        <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                        <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                        <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                        <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i>
+                                        <span th:text="${role.role}"></span> </div>
+
+                                </div>
+                                <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                                    <div class="item" th:each="role:${roles}" th:attr="data-value=${role.id}">
+
+                                        <span th:text="${role.role}"></span>
+                                        <i th:if="${role.role.equals('ADMIN')}" class="ui setting icon" ></i>
+                                        <i th:if="${role.role.equals('MANAGER')}" class="ui  spy icon" ></i>
+                                        <i th:if="${role.role.equals('OPERATOR')}" class="ui  user icon" ></i>
+                                        <i th:if="${role.role.equals('CLIENT')}" class="ui  user outline icon" ></i></div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui grey labeled icon submit button">
+                            <i class="add icon"></i> <span th:text="#{admin.add.sms.level.button.title}"></span> </div>
+                        <div class="ui error message"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="four wide column"></div>
+        </div>
+    </div>
+    <div class="ui centered grid" th:if="${smsLevels!=null}">
+        <div class="row">
+            <div class="three wide column"></div>
+
+            <div  class="ten wide column" >
+                <div class="ui raised piled segment">
+                    <table th:fragment="smsLevelList" id="smsLevelsTable" class="ui striped table" >
+
+                        <thead>
+
+                        <tr><th><span th:text="#{admin.smslevel.title}"></span>
+                        </th>
+                            <th><span th:text="#{admin.smslevel.roles}"></span> </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody >
+                        <tr  th:each="smsLevel:${smsLevels}" th:id="${smsLevel.id}" >
+
+                            <td>
+                                <span th:text="${smsLevel.title}">
+
+                                </span>
+
+                            </td>
+                            <td>
+                            <div th:each="role : ${smsLevel.roles}">
+
+                                    <label th:text="${role.role}">Name</label>
+
+                            </div>
+                            </td>
+
+
+                        </tr>
+
+                        </tbody>
+                        <tfoot>
+
+                        </tr></tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="three wide column"></div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>

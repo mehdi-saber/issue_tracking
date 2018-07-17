@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="admin/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="admin/fragment/header :: header"></div>
+<script>
+
+    $(document).ready(function(){
+        $('.ui .dropdown').dropdown()
+    });
+
+    $(document).ready(function () {
+        $('.ui.form')
+            .form({
+                fields:{
+                    categoryTitle:{
+                        identifier: 'categoryTitle',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter the title'
+                            }
+                        ]
+                    }
+                }
+            })
+
+    })
+    function handleSubmit() {
+        $('#updateButton').click(function () {
+            $('.ui.basic.modal')
+
+                .modal({
+                    blurring: true
+                })
+                .modal('show')
+            ;
+            $('#confirmSubmit').click(function () {
+                $('#categoryDetails').submit();
+            })
+        })
+    }
+    $(document).ready(function () {
+        hoverShow();
+    })
+    function hoverShow() {
+        $("#categoriesTable tbody tr").hover(
+            function () {
+                $(this).css("background","grey");
+                $(this).css("font-weight","bolder");
+                $(this).css("color","#DADADA");
+            },
+            function () {
+                $(this).css("background","");
+                $(this).css("font-weight","inherit");
+                $(this).css("color","");
+            }
+        );
+    }
+    $(document).ready(function(){
+        $('.ui .dropdown').dropdown();
+
+    });
+
+    $(document).ready(function () {
+        $( "#categorySearchBar" ).keyup(function() {
+            $("#pageNumber a").css("font-weight", "inherit");
+            $("#pageNumber a").css("color", "black");
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+            var ur;
+            var text = this.text;
+            if ($('#categorySearchBar').val()!=''){
+                ur = "categories/search="+$('#categorySearchBar').val();
+
+            }else { ur = "categories/page=1";
+                $('#page1').css("color", "green").css("font-weight", "bolder");
+
+            }
+            $.ajax({
+                url: ur,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    $('#categoriesTable').html(data)
+                    categoryDetailsAjax();
+                    hoverShow();
+                },
+                error: function (xhr, status) {
+                    alert("Sorry, there was a problem!");
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+
+                }
+            });
+
+        });
+
+
+
+    })
+
+    $(document).ready(function () {
+        $( "#pageNumber a" ).click(function() {
+
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+            $("#pageNumber a").css("font-weight", "inherit");
+            $("#pageNumber a").css("color", "black");
+            $(this).css("color", "green");
+            $(this).css("font-weight", "bolder");
+
+            $.ajax({
+                url: "categories/page="+this.text,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    $('#categoriesTable').html(data)
+                    categoryDetailsAjax();
+                    hoverShow();
+                },
+                error: function (xhr, status) {
+                    alert("Sorry, there was a problem!");
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+                }
+            });
+
+
+
+        });
+    })
+
+    $(document).ready(function () {
+        categoryDetailsAjax();
+    })
+
+    function categoryDetailsAjax() {
+        $( "#categoriesTable tbody tr" ).click(function() {
+
+            /*var url = 'accounts/';
+
+             if ($('#userSearchBar').val() != '') {
+             url = url + '/' + $('#userSearchBar').val();
+             $("#usersTable").load(url);
+             }*/
+
+            $.ajax({
+                url: "categories/category="+this.id,
+
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+
+                    $('#categoryDetails').html(data);
+                    $('.ui .dropdown').dropdown();
+                    handleSubmit();
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                },
+                complete: function (xhr, status) {
+                    //$('#showresults').slideDown('slow')
+                }
+            });
+
+
+
+        });
+    }
+
+</script>
+</head>
+
+<body class="atro">
+<header class="atroheader">
+    <div th:include="admin/fragment/header :: menu"></div>
+</header>
+
+<div class="atrocontent">
+    <div th:if="${#locale.getLanguage().equals('fa')}">
+        <div class="ui basic modal" style="text-align:center;width: 100%">
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.categories.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content">
+                <h3><span th:text="#{admin.categories.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                 <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div th:if="${#locale.getLanguage().equals('en')}">
+        <div class="ui basic modal" style="text-align:center">
+            <div class="ui icon header" style="border-bottom: none">
+                <i class="write icon"></i>
+                <span th:text="#{admin.categories.confirm.dialog.update.task.title}"></span>
+            </div>
+            <div class="content">
+                <h3><span th:text="#{admin.categories.confirm.dialog.content}"></span> </h3>
+            </div>
+            <div class="actions" style="text-align: center;border-top: none">
+                <div class="ui inverted red basic cancel  button">
+                    <i class="remove icon"></i>
+                    <span th:text="#{action.no}"></span>
+                </div>
+                <div id="confirmSubmit" class="ui inverted green basic ok  button">
+                    <i class="checkmark icon"></i>
+                    <span th:text="#{action.yes}"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="ui centered grid">
+        <div class="row">
+            <div class="four wide column"></div>
+            <div class="eight wide column" style="text-align: center">
+                <h2 class="ui icon header">
+                    <i class="browser icon"></i>
+                    <div class="content">
+                        <span th:text="#{admin.categories.create.category.title}"></span>
+
+                    </div>
+                </h2>
+                <div class="ui raised piled segment">
+                    <form class="ui form" th:object="${category}" th:action="@{categories}" th:method="post">
+                        <div th:if="${#locale.getLanguage().equals('en')}">
+                            <div class="ui right labeled left icon input">
+                                <i class="browser icon"></i>
+                                <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"   th:field="*{title}">
+                                <a class="ui tag label submit">
+                                    <span th:text="#{admin.categories.create.button.title}"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="ui right labeled left icon input">
+                                <a class="ui tag label submit">
+                                    <span th:text="#{admin.categories.create.button.title}"></span>
+                                </a>
+                                <i class="invisible browser icon"></i>
+                                <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"   th:field="*{title}">
+
+                            </div>
+                        </div>
+                        <div class="ui error message"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="four wide column"></div>
+        </div>
+    </div>
+    <div class="ui centered grid" th:if="${categories!=null}">
+        <div class="row">
+            <div class="three wide column"></div>
+
+            <div  class="ten wide column" >
+                <div class="ui raised piled segment">
+                    <div class="ui left icon input">
+                        <input type="text" id="categorySearchBar" th:placeholder="#{admin.categories.search.category.title}" >
+                        <i class="browser icon"></i>
+                    </div>
+                    <table th:fragment="categoryList" id="categoriesTable" class="ui striped table" >
+
+                        <thead>
+
+                        <tr><th><span th:text="#{admin.categories.title}"></span>
+                        </th>
+                            <th><span th:text="#{admin.categories.created.by.title}"></span> </th>
+
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody >
+                        <tr  th:each="category:${categories}" th:id="${category.id}" >
+
+                            <td>
+                                <span th:text="${category.title}">
+
+                                </span>
+
+                            </td>
+                            <td>
+                                <span th:text="${category.createdBy.email}"></span>
+                            </td>
+
+
+                        </tr>
+
+                        </tbody>
+                        <tfoot>
+
+                        </tr></tfoot>
+                    </table>
+
+                        <div class="ui right floated pagination menu">
+                            <a class="icon item">
+                                <i class="left chevron icon"></i>
+                            </a>
+                            <div th:each="i : ${#numbers.sequence(0,pageNumbers)}" id="pageNumber">
+                                <a class="item" th:text="${i+1}"   ></a>
+
+                            </div>
+                            <a class="icon item">
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+
+                </div>
+            </div>
+            <div class="three wide column"></div>
+        </div>
+    </div>
+    <div class="ui centered grid"  >
+        <div class="row">
+            <div class="three wide column"  ></div>
+            <div class="ten wide column" >
+                <form   th:fragment="details" class="ui form"  action="#"   id="categoryDetails"  th:action="@{categories/sub}" th:method="post"  th:object="${selectedCategory}">
+                    <h3 th:if="${selectedCategory!=null}" class="ui icon header" style="display: block">
+                        <i class="search icon"></i>
+                        <div class="content">
+                            <span th:text="#{admin.categories.details.title}"></span>
+
+                        </div>
+                    </h3>
+                    <div  class="ui raised segment" th:if="${selectedCategory!=null}" >
+                        <div th:if="${#locale.getLanguage().equals('en')}">
+                            <div class="ui black ribbon label" style="margin-bottom: 15px">
+                                <i class="icon browser"></i><span th:text="*{title}"></span>
+                            </div>
+                        </div>
+                        <div th:if="${#locale.getLanguage().equals('fa')}">
+                            <div class="ui black ribbon label" style="margin-bottom: 15px">
+                               <span th:text="*{title}"></span> <i class="icon browser"></i>
+                            </div>
+                        </div>
+
+
+                            <div class="field">
+                                <label><span th:text="#{admin.categories.subject.title}"></span> </label>
+                                <div class="ui left icon input">
+                                    <i class="browser icon"></i>
+                                    <input type="text" id="subCategoryTitle"   th:field="${subCategory.title}" th:placeholder="#{admin.categories.subject.title.placeholder}">
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="field">
+
+                                <label><span th:text="#{admin.categories.created.by.title}"></span> </label>
+                                <span th:if="${selectedCategory.createdBy!=null}" th:text="${selectedCategory.createdBy.email}"></span>
+
+
+                            </div>
+
+
+
+
+                        <!-- ########### -->
+
+
+
+                        <div class="two fields">
+                          <div class="field">
+                              <div class="ui multiple dropdown">
+                                  <input type="hidden" th:field="${subCategory.tags}">
+                                  <i class="filter icon"></i>
+                                  <span class="text" th:text="#{admin.categories.filter.posts.title}"> </span>
+                                  <div class="menu">
+                                      <div class="ui icon search input" style="display: table-cell;padding: 5px">
+                                          <i class="search icon"></i>
+                                          <input type="text" th:placeholder="#{admin.categories.subject.title.placeholder}">
+                                      </div>
+                                      <div class="divider"></div>
+                                      <div class="header">
+                                          <i class="tags icon"></i>
+                                          <span th:text="#{admin.categories.tag.label.title}"></span>
+                                      </div>
+                                      <div class="scrolling menu">
+                                          <div class="item" th:each="tag: ${tags}" th:attr="data-value=${tag.id}" >
+                                              <i class="hashtag icon"></i>
+                                              <span th:text="${tag.name}"></span>
+                                          </div>
+
+                                      </div>
+                                  </div>
+                              </div>
+
+                          </div>
+                            <div class="field">
+                                <label><span th:text="#{admin.tasks.priority.title}"></span> </label>
+                                <div class="ui selection dropdown" >
+                                    <input type="hidden" th:field="${subCategory.priority}" id="prioritySelect">
+                                    <div class="default text"><span th:text="#{admin.tasks.select.priority.title}"></span> </div>
+                                    <i class="dropdown icon"></i>
+                                    <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
+                                        <div class="item" data-value="3">
+                                            <div class="ui red empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.high.title}"></span>
+                                        </div>
+                                        <div class="item" data-value="2">
+                                            <div class="ui yellow empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                                        </div>
+                                        <div class="item" data-value="1">
+                                            <div class="ui olive empty circular horizontal label"></div>
+                                            <span th:text="#{admin.tasks.priority.low.title}"></span>
+                                        </div>
+
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
+                                        <div class="item" data-value="3">
+                                            <span th:text="#{admin.tasks.priority.high.title}"></span>
+                                            <div class="ui red empty circular horizontal label"></div>
+
+                                        </div>
+                                        <div class="item" data-value="2">
+                                            <span th:text="#{admin.tasks.priority.medium.title}"></span>
+                                            <div class="ui yellow empty circular horizontal label"></div>
+
+                                        </div>
+                                        <div class="item" data-value="1">
+                                            <span th:text="#{admin.tasks.priority.low.title}"></span>
+                                            <div class="ui olive empty circular horizontal label"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- ########### -->
+
+                        <table   class="ui striped table" >
+
+                            <thead>
+
+                            <tr><th><span th:text="#{admin.categories.title}"></span>
+                            </th>
+                                <th><span th:text="#{admin.categories.tags.title}"></span> </th>
+
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody >
+                            <tr  th:each="subCategory:${subCategories}" >
+
+                                <td>
+                                <span th:text="${subCategory.title}">
+
+                                </span>
+
+                                </td>
+                                <td>
+                                    <div th:each="tag:${subCategory.tags}" class="ui black tag label"><span th:text="${tag.name}"></span> </div>
+                                </td>
+
+
+                            </tr>
+
+                            </tbody>
+                            <tfoot>
+
+                            </tr></tfoot>
+                        </table>
+
+
+                        <div id="updateButton" class="ui grey labeled icon  button">
+                            <i class="write icon"></i> <span th:text="#{admin.categories.update.button.title}"></span> </div>
+                        <div class="ui olive message" th:if="${successMessage}!=null">
+                            <span th:utext="${successMessage}"></span>
+                        </div>
+
+                        <div class="ui error message"></div>
+
+
+
+
+
+                    </div>
+
+
+                </form>
+
+
+
+
+
+            </div>
+            <div class="three wide column"></div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="atrofooter">
+    <div th:include="admin/fragment/footer :: footer"></div>
+</footer>
+
+
+</body>
+</html>
