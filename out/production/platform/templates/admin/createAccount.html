@@ -39,6 +39,40 @@
                             prompt:'Please enter your last name'
                         }]
                     },
+                    fatherName:{
+                        identifier:'fatherName',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter your father name'
+                        }]
+                    },
+                    mobile:{
+                        identifier:'mobile',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter your mobile number'
+                        }]
+                    },
+                    nationalCode:{
+                        identifier:'nationalCode',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter your national code'
+                        }]
+                    },
+                    phone1:{
+                        identifier:'phone1',
+                        rules:[{
+                            type:'empty',
+                            prompt:'Please enter your first phone'
+                        }]
+                    },
+                    phone2:{
+                        identifier:'phone2',
+                        rules:[{
+                            type:'empty'
+                        }]
+                    },
                     email:{
                         identifier:'email',
                         rules:[{
@@ -126,16 +160,40 @@
                             <input th:placeholder="#{admin.account.lastname.placeholder}" type="text" id="lastName" th:field="*{lastName}">
                         </div>
                     </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label><span th:text="#{admin.account.fathername.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.fathername.placeholder}" type="text" th:field="*{fatherName}" id="fatherName" >
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.nationalcode.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.nationalcode.placeholder}" type="text" id="nationalژode" th:field="*{nationalCode}">
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label><span th:text="#{admin.account.phone1.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.phone1.placeholder}" type="text" th:field="*{phone1}" id="phone1" >
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.phone2.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.phone2.placeholder}" type="text" id="phone2" th:field="*{phone2}">
+                        </div>
+                    </div>
 
+                    <div class="two fields">
                     <div class="field">
-
                         <label><span th:text="#{admin.account.email.title}"></span> </label>
                         <input type="email" th:placeholder="#{admin.account.email.placeholder}" id="email" th:field="*{email}">
                         <label style="color:red;"
                                 th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
                                 class="validation-message"></label>
 
-
+                    </div>
+                        <div class="field">
+                            <label><span th:text="#{admin.account.mobile.title}"></span> </label>
+                            <input th:placeholder="#{admin.account.mobile.placeholder}" type="text" id="mobile" th:field="*{mobile}">
+                        </div>
                     </div>
 
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Client Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="client/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="client/fragment/header :: header"></div>
+</head>
+<body class="atro">
+<header class="atroheader">
+    <div th:include="client/fragment/header :: menu"></div>
+</header>
+<div class="atrocontent">
+    <div class="ui centered grid">
+        <div class="five wide column"></div>
+        <div class="six wide column" th:fragment="taskDetails" id="taskDetails">
+
+            <form class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}"
+                  th:object="${task}">
+                <h2 class="ui icon header" style="display: block">
+
+                    <i class="tasks icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.task.details}"></span>
+
+                    </div>
+                </h2>
+                <div class="ui raised piled segment">
+                    <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span></h4>
+
+                    <div class="field">
+                        <label><span th:text="#{operator.index.category.title}"></span> </label>
+                        <span th:text="${task.subCategory.category.title}"></span>
+                    </div>
+                    <div class="field" th:fragment="subcategories" id="subcategories">
+                        <label><span th:text="#{operator.index.subject.title}"></span> </label>
+                        <span th:text="${task.subCategory.title}"></span>
+                    </div>
+
+
+                    <div class="two fields" th:if="${#locale.getLanguage().equals('en')}">
+                        <div class="field">
+                            <label><span th:text="#{operator.index.title}"></span> </label>
+                            <span th:text="${task.title}"></span>
+                        </div>
+                        <div class="field">
+                            <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
+                                    class="attach icon"></i> </a>
+                        </div>
+                    </div>
+
+
+                    <div class="two fields" th:if="${#locale.getLanguage().equals('fa')}">
+                        <div class="field">
+                            <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
+                                    class="attach icon"></i> </a>
+                        </div>
+                        <div class="field">
+                            <label><span th:text="#{operator.index.title}"></span> </label>
+                            <span th:text="${task.title}" th:readonly=""></span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label><span th:text="#{operator.index.description.title}"></span> </label>
+                        <textarea th:if="${edit}" style="margin-top: 0px; margin-bottom: 0px; height: 112px;"
+                                  id="description" readonly></textarea>
+                        <span  th:text="${task.content}"></span>
+                    </div>
+
+
+                    <div class="field">
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="five wide column"></div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

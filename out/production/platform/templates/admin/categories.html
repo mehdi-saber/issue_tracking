@@ -24,6 +24,24 @@
                                 prompt: 'Please enter the title'
                             }
                         ]
+                    },
+                    categoryEnTitle:{
+                        identifier: 'categoryEnTitle',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter the title'
+                            }
+                        ]
+                    },
+                    code:{
+                        identifier: 'code',
+                        rules:[
+                            {
+                                type:'empty',
+                                prompt: 'Please enter the code'
+                            }
+                        ]
                     }
                 }
             })
@@ -252,23 +270,62 @@
                 <div class="ui raised piled segment">
                     <form class="ui form" th:object="${category}" th:action="@{categories}" th:method="post">
                         <div th:if="${#locale.getLanguage().equals('en')}">
-                            <div class="ui right labeled left icon input">
-                                <i class="browser icon"></i>
-                                <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"   th:field="*{title}">
-                                <a class="ui tag label submit">
-                                    <span th:text="#{admin.categories.create.button.title}"></span>
-                                </a>
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"th:field="*{title}">
+                                </div>
                             </div>
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.en.name.placeholder}" id="categoryEnTitle"th:field="*{enTitle}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.code.placeholder}" id="code"th:field="*{code}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui toggle green checkbox">
+                                    <input type="checkbox"  id="isInternal" th:field="*{internal}">
+                                    <label><span th:text="#{admin.categories.category.internal}"></span> </label>
+                                </div>
+                            </div>
+                            <div class="ui grey labeled icon submit button">
+                                <i class="add icon"></i> <span th:text="#{admin.categories.create.button.title}"></span> </div>
+                            <div class="ui error message"></div>
                         </div>
                         <div th:if="${#locale.getLanguage().equals('fa')}">
-                            <div class="ui right labeled left icon input">
-                                <a class="ui tag label submit">
-                                    <span th:text="#{admin.categories.create.button.title}"></span>
-                                </a>
-                                <i class="invisible browser icon"></i>
-                                <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"   th:field="*{title}">
-
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.name.placeholder}" id="categoryTitle"th:field="*{title}">
+                                </div>
                             </div>
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.en.name.placeholder}" id="categoryEnTitle"th:field="*{enTitle}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui right labeled left icon input">
+                                    <i class="invisible tags icon"></i>
+                                    <input type="text" th:placeholder="#{admin.categories.category.code.placeholder}" id="code"th:field="*{code}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui toggle green checkbox">
+                                    <input type="checkbox"  id="isInternal" th:field="*{internal}">
+                                    <label><span th:text="#{admin.categories.category.internal}"></span> </label>
+                                </div>
+                            </div>
+                            <div class="ui grey labeled icon submit button">
+                                <i class="add icon"></i> <span th:text="#{admin.categories.create.button.title}"></span> </div>
+                            <div class="ui error message"></div>
                         </div>
                         <div class="ui error message"></div>
                     </form>

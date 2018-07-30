@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>leave</title>
+</head>
+<body>
+<div class="ui selection dropdown">
+    <div class="default text" th:text="#{moein.leavepage.userpicker}">adsfa</div>
+    <i class="dropdown icon"></i>
+
+    <div class="form-group blu-margin">
+        <select class="form-control" th:field="${}"  id="dropOperator">
+            <option value="0" th:text="select user" ></option>
+            <option th:each="user_tbl : ${operators}" th:value="${operator.id}" th:text="${operator.operatorName}"></option>
+        </select>
+    </div>
+    <!--<div th:if="${#locale.getLanguage().equals('en')}" class="menu">-->
+        <!--<div class="item" data-value="0">-->
+            <!--<div class="ui  label"></div>-->
+            <!--<span th:text="#{admin.index.status.pending}"></span>-->
+        <!--</div>-->
+        <!--<div class="item" data-value="1">-->
+            <!--<div class="ui  label"></div>-->
+            <!--<span th:text="#{admin.index.status.working}"></span>-->
+        <!--</div>-->
+        <!--<div class="item" data-value="2">-->
+            <!--<div class="ui  label"></div>-->
+            <!--<span th:text="#{admin.index.status.done}"></span>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+</body>
+</html>
