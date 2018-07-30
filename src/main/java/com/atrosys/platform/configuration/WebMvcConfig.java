@@ -28,7 +28,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 
     @Bean
-    UserService userService(){
+    UserService userService() {
         return new UserServiceImpl();
     }
     @Bean public UserManager userManager(){

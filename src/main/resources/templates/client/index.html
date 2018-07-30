@@ -30,13 +30,13 @@
             $('#tasksMenu .item')
                 .tab()
             ;
-            $('#fileText').click(function() {
+            $('#fileText').click(function () {
                 $(this).parent().find("input:file").click();
             });
 
 
             $('input:file', '.ui.action.input')
-                .on('change', function(e) {
+                .on('change', function (e) {
                     var name = e.target.files[0].name;
                     $('input:text', $(e.target).parent()).val(name);
                 });
@@ -45,44 +45,44 @@
 
             $('.ui.form')
                 .form({
-                    fields:{
-                        description:{
+                    fields: {
+                        description: {
                             identifier: 'description',
-                            rules:[
+                            rules: [
                                 {
-                                    type:'empty',
+                                    type: 'empty',
                                     prompt: 'Please enter description'
                                 }
                             ]
                         },
 
 
-                        userSelect:{
-                            identifier:'userSelect',
-                            rules:[{
-                                type:'minCount[1]',
-                                prompt:'Please select at least one user'
+                        userSelect: {
+                            identifier: 'userSelect',
+                            rules: [{
+                                type: 'minCount[1]',
+                                prompt: 'Please select at least one user'
                             }]
                         },
-                        prioritySelect:{
-                            identifier:'prioritySelect',
-                            rules:[{
-                                type:'minCount[1]',
-                                prompt:'Please select priority'
+                        prioritySelect: {
+                            identifier: 'prioritySelect',
+                            rules: [{
+                                type: 'minCount[1]',
+                                prompt: 'Please select priority'
                             }]
                         },
-                        subcategorySelect:{
-                            identifier:'subcategorySelect',
-                            rules:[{
-                                type:'minCount[1]',
-                                prompt:'Please select subject'
+                        subcategorySelect: {
+                            identifier: 'subcategorySelect',
+                            rules: [{
+                                type: 'minCount[1]',
+                                prompt: 'Please select subject'
                             }]
                         },
-                        categorySelect:{
-                            identifier:'categorySelect',
-                            rules:[{
-                                type:'minCount[1]',
-                                prompt:'Please select category'
+                        categorySelect: {
+                            identifier: 'categorySelect',
+                            rules: [{
+                                type: 'minCount[1]',
+                                prompt: 'Please select category'
                             }]
                         }
                     }
@@ -90,7 +90,7 @@
             subcategoriesAjax();
         })
         function subcategoriesAjax() {
-            $( "#categorySelect" ).change(function() {
+            $("#categorySelect").change(function () {
 
                 /*var url = 'accounts/';
 
@@ -100,7 +100,7 @@
                  }*/
 
                 $.ajax({
-                    url: "index/category="+$('#categorySelect').val(),
+                    url: "index/category=" + $('#categorySelect').val(),
 
                     type: "POST",
                     dataType: "html",
@@ -120,7 +120,6 @@
                 });
 
 
-
             });
         }
     </script>
@@ -137,50 +136,55 @@
             <div class="three wide column"></div>
             <div class="ten wide column">
                 <h2 class="ui icon header" style="display: block">
-
                     <i class="tasks icon"></i>
-
-
                     <div class="content">
                         <span th:text="#{client.tasks.create.task.title}"></span>
-
                     </div>
                 </h2>
                 <div class="ui raised piled segment">
-                    <form class="ui form" th:action="@{index}" th:method="post" th:object="${task}" enctype="multipart/form-data" id="taskForm">
-                        <h4 class="ui dividing header"><span th:text="#{client.tasks.task.information.title}"></span> </h4>
-
+                    <form class="ui form" th:action="@{index}" th:method="post" th:object="${task}"
+                          enctype="multipart/form-data" id="taskForm">
+                        <h4 class="ui dividing header"><span th:text="#{client.tasks.task.information.title}"></span>
+                        </h4>
                         <div class="field">
                             <label><span th:text="#{client.tasks.category.title}"></span> </label>
                             <select class="ui fluid dropdown" id="categorySelect">
                                 <option value="" th:text="#{client.tasks.category.placeholder}"></option>
-                                <option class="" th:each="category:${categories}" th:text="${category.title}" th:value="${{category}}" th:attr="data-value=${category.id}" th:id="${category.id}" ></option>
-
-
+                                <option class="" th:each="category:${categories}" th:text="${category.title}"
+                                        th:value="${{category}}" th:attr="data-value=${category.id}"
+                                        th:id="${category.id}"></option>
                             </select>
                         </div>
                         <div class="field" th:fragment="subcategories" id="subcategories">
                             <label><span th:text="#{client.tasks.subject.title}"></span> </label>
-                            <div class="ui fluid search selection dropdown" th:if="${subcategories!=null}">
+                            <div class="ui fluid search selection dropdown"
+                                th:if="${subcategories!=null}">
+
                                 <input type="hidden" th:field="${task.subCategory}" id="subcategorySelect">
                                 <i class="dropdown icon"></i>
-                                <div class="default text"><span th:text="#{client.tasks.select.subject.title}"></span> </div>
+                                <div class="default text"><span th:text="#{client.tasks.select.subject.title}"></span>
+                                </div>
                                 <div class="menu">
-                                    <div class="item" th:each="subcategory:${subcategories}" th:attr="data-value=${subcategory.id}"><span th:text="${subcategory.title}"></span> </div>
-
-
+                                    <div class="item" th:each="subcategory:${subcategories}"
+                                         th:attr="data-value=${subcategory.id}">
+                                        <span th:text="${subcategory.title}"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
                         <div th:if="${#locale.getLanguage().equals('en')}" class="two fields">
                             <div class="field">
                                 <label><span th:text="#{client.tasks.title}"></span> </label>
-                                <input th:placeholder="#{client.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+                                <input th:placeholder="#{client.tasks.title.placeholder}" type="text"
+                                       th:field="*{title}">
                             </div>
                             <div class="field">
                                 <label><span th:text="#{client.tasks.attachment}"></span> </label>
                                 <div class="ui action input">
-                                    <input type="text" id="fileText" th:placeholder="#{client.tasks.attachment.placeholder}" readonly>
+                                    <input type="text" id="fileText"
+                                           th:placeholder="#{client.tasks.attachment.placeholder}" readonly>
                                     <input type="file" name="file" style="display: none">
                                     <div class="ui icon button">
                                         <i class="attach icon" id="fileLabel"></i>
@@ -195,25 +199,27 @@
                                     <div class="ui icon button">
                                         <i class="attach icon" id="fileLabel"></i>
                                     </div>
-                                    <input type="text" id="fileText" th:placeholder="#{client.tasks.attachment.placeholder}" readonly>
+                                    <input type="text" id="fileText"
+                                           th:placeholder="#{client.tasks.attachment.placeholder}" readonly>
                                     <input type="file" name="file" style="display: none">
 
                                 </div>
                             </div>
                             <div class="field">
                                 <label><span th:text="#{client.tasks.title}"></span> </label>
-                                <input th:placeholder="#{client.tasks.title.placeholder}" type="text" th:field="*{title}"  >
+                                <input th:placeholder="#{client.tasks.title.placeholder}" type="text"
+                                       th:field="*{title}">
                             </div>
                         </div>
                         <div class="field">
                             <label><span th:text="#{client.tasks.description.title}"></span> </label>
-                            <textarea style="margin-top: 0px; margin-bottom: 0px; height: 112px;" id="description" th:field="*{content}"></textarea>
+                            <textarea style="margin-top: 0px; margin-bottom: 0px; height: 112px;" id="description"
+                                      th:field="*{content}"></textarea>
                         </div>
 
 
-
                         <div class="ui grey labeled icon submit button">
-                            <i class="add icon"></i> <span th:text="#{client.tasks.create.button.title}"></span> </div>
+                            <i class="add icon"></i> <span th:text="#{client.tasks.create.button.title}"></span></div>
                         <div class="ui error message"></div>
                     </form>
                 </div>
@@ -223,56 +229,87 @@
         <div class="row">
             <div class="three wide column"></div>
             <div class="ten wide column">
-                <div th:if="${#locale.getLanguage().equals('en')}" class="ui pointing floated secondary menu" id="tasksMenu" style="margin-bottom: 10px">
+                <div th:if="${#locale.getLanguage().equals('en')}" class="ui pointing floated secondary menu"
+                     id="tasksMenu" style="margin-bottom: 10px">
                     <a class="item active" data-tab="first"><span th:text="#{client.tasks.status.pending}"></span></a>
                     <a class="item" data-tab="second"><span th:text="#{client.tasks.status.working}"></span> </a>
                     <a class="item" data-tab="third"><span th:text="#{client.tasks.status.done}"></span> </a>
                 </div>
-                <div th:if="${#locale.getLanguage().equals('fa')}" class="ui pointing floated secondary menu" id="tasksMenu" style="margin-bottom: 10px">
-
-
+                <div th:if="${#locale.getLanguage().equals('fa')}" class="ui pointing floated secondary menu"
+                     id="tasksMenu" style="margin-bottom: 10px">
                     <a class="item" data-tab="third"><span th:text="#{client.tasks.status.done}"></span> </a>
                     <a class="item" data-tab="second"><span th:text="#{client.tasks.status.working}"></span> </a>
                     <a class="item active" data-tab="first"><span th:text="#{client.tasks.status.pending}"></span></a>
                 </div>
+
+
                 <div class="ui bottom attached tab active" data-tab="first">
-                    <div class="ui raised card" style="width: 100%" th:if="${pendingTasks!=null}" th:each="task:${pendingTasks}">
+                    <div class="ui raised card" style="width: 100%" th:if="${pendingTasks!=null}"
+                         th:each="task:${pendingTasks}">
                         <div class="content">
 
                             <div th:if="${!task.taskHistories.isEmpty()}">
-                                <a  class="ui red ribbon label">    <span  th:text="#{client.tasks.status.pending}"></span>   </a>
+                                <a class="ui red ribbon label"> <span th:text="#{client.tasks.status.pending}"></span>
+                                </a>
 
                             </div>
-                            <a  class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}">    <span  th:text="#{client.tasks.status.pending}"></span> </a>
+                            <a class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}"> <span
+                                    th:text="#{client.tasks.status.pending}"></span> </a>
 
-                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon" th:if="${task.attachment!=null}"></i><span th:text="${task.title}"></span></div>
-                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span th:text="${task.title}"></span><i class="attach icon" th:if="${task.attachment!=null}"></i></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon"
+                                                                                                 th:if="${task.attachment!=null}"></i><span
+                                    th:text="${task.title}"></span></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span
+                                    th:text="${task.title}"></span><i class="attach icon"
+                                                                      th:if="${task.attachment!=null}"></i></div>
                             <div class="meta">
-                                <span th:if="${!task.taskHistories.isEmpty()}" th:text="${task.taskHistories[0].createdTime}"></span>
+                                <span th:if="${!task.taskHistories.isEmpty()}"
+                                      th:text="${task.taskHistories[0].createdTime}"></span>
                                 <span th:if="${task.taskHistories.isEmpty()}" th:text="${task.createdTime}"></span>
                             </div>
                             <div class="description">
                                 <p th:text="${task.content}"></p>
 
                             </div>
+
+
+                            <a class="ui red labeled icon submit button" style="float: left"
+                               th:href="@{/client/test-task(id=${task.id})}">
+                                <i class="question icon"></i><span th:text="#{client.tasks.create.questionbutton.title}">
+                                     th:href="@{/order/details(id=${order.id})}"
+                            </span></a>
+
+
                         </div>
                     </div>
                 </div>
                 <div class="ui bottom attached tab" data-tab="second">
-                    <div class="ui raised card" style="width: 100%" th:if="${workingTasks!=null}"  th:each="task:${workingTasks}">
+                    <div class="ui raised card" style="width: 100%" th:if="${workingTasks!=null}"
+                         th:each="task:${workingTasks}">
                         <div class="content">
 
                             <div th:if="${!task.taskHistories.isEmpty()}">
-                                <a  class="ui red ribbon label" th:if="${task.taskHistories[0].description.equals('0')}">    <span  th:text="#{client.tasks.status.pending}"></span>   </a>
-                                <a  class="ui orange ribbon label" th:if="${task.taskHistories[0].description.equals('1')}">     <span  th:text="#{client.tasks.status.working}" ></span> </a>
-                                <a  class="ui green ribbon label" th:if="${task.taskHistories[0].description.equals('2')}">    <span  th:text="#{client.tasks.status.done}" ></span></a>
+                                <a class="ui red ribbon label" th:if="${task.taskHistories[0].description.equals('0')}">
+                                    <span th:text="#{client.tasks.status.pending}"></span> </a>
+                                <a class="ui orange ribbon label"
+                                   th:if="${task.taskHistories[0].description.equals('1')}"> <span
+                                        th:text="#{client.tasks.status.working}"></span> </a>
+                                <a class="ui green ribbon label"
+                                   th:if="${task.taskHistories[0].description.equals('2')}"> <span
+                                        th:text="#{client.tasks.status.done}"></span></a>
                             </div>
-                            <a  class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}">    <span  th:text="#{client.tasks.status.pending}"></span> </a>
+                            <a class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}"> <span
+                                    th:text="#{client.tasks.status.pending}"></span> </a>
 
-                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon" th:if="${task.attachment!=null}"></i><span th:text="${task.title}"></span></div>
-                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span th:text="${task.title}"></span><i class="attach icon" th:if="${task.attachment!=null}"></i></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon"
+                                                                                                 th:if="${task.attachment!=null}"></i><span
+                                    th:text="${task.title}"></span></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span
+                                    th:text="${task.title}"></span><i class="attach icon"
+                                                                      th:if="${task.attachment!=null}"></i></div>
                             <div class="meta">
-                                <span th:if="${!task.taskHistories.isEmpty()}" th:text="${task.taskHistories[0].createdTime}"></span>
+                                <span th:if="${!task.taskHistories.isEmpty()}"
+                                      th:text="${task.taskHistories[0].createdTime}"></span>
                                 <span th:if="${task.taskHistories.isEmpty()}" th:text="${task.createdTime}"></span>
                             </div>
                             <div class="description">
@@ -283,20 +320,32 @@
                     </div>
                 </div>
                 <div class="ui bottom attached tab" data-tab="third">
-                    <div class="ui raised card" style="width: 100%" th:if="${doneTasks!=null}"  th:each="task:${doneTasks}">
+                    <div class="ui raised card" style="width: 100%" th:if="${doneTasks!=null}"
+                         th:each="task:${doneTasks}">
                         <div class="content">
 
                             <div th:if="${!task.taskHistories.isEmpty()}">
-                                <a  class="ui red ribbon label" th:if="${task.taskHistories[0].description.equals('0')}">    <span  th:text="#{client.tasks.status.pending}"></span>   </a>
-                                <a  class="ui orange ribbon label" th:if="${task.taskHistories[0].description.equals('1')}">     <span  th:text="#{client.tasks.status.working}" ></span> </a>
-                                <a  class="ui green ribbon label" th:if="${task.taskHistories[0].description.equals('2')}">    <span  th:text="#{client.tasks.status.done}" ></span></a>
+                                <a class="ui red ribbon label" th:if="${task.taskHistories[0].description.equals('0')}">
+                                    <span th:text="#{client.tasks.status.pending}"></span> </a>
+                                <a class="ui orange ribbon label"
+                                   th:if="${task.taskHistories[0].description.equals('1')}"> <span
+                                        th:text="#{client.tasks.status.working}"></span> </a>
+                                <a class="ui green ribbon label"
+                                   th:if="${task.taskHistories[0].description.equals('2')}"> <span
+                                        th:text="#{client.tasks.status.done}"></span></a>
                             </div>
-                            <a  class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}">    <span  th:text="#{client.tasks.status.pending}"></span> </a>
+                            <a class="ui red ribbon label" th:if="${task.taskHistories.isEmpty()}"> <span
+                                    th:text="#{client.tasks.status.pending}"></span> </a>
 
-                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon" th:if="${task.attachment!=null}"></i><span th:text="${task.title}"></span></div>
-                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span th:text="${task.title}"></span><i class="attach icon" th:if="${task.attachment!=null}"></i></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('fa')}"><i class="attach icon"
+                                                                                                 th:if="${task.attachment!=null}"></i><span
+                                    th:text="${task.title}"></span></div>
+                            <div class="header" th:if="${#locale.getLanguage().equals('en')}"><span
+                                    th:text="${task.title}"></span><i class="attach icon"
+                                                                      th:if="${task.attachment!=null}"></i></div>
                             <div class="meta">
-                                <span th:if="${!task.taskHistories.isEmpty()}" th:text="${task.taskHistories[0].createdTime}"></span>
+                                <span th:if="${!task.taskHistories.isEmpty()}"
+                                      th:text="${task.taskHistories[0].createdTime}"></span>
                                 <span th:if="${task.taskHistories.isEmpty()}" th:text="${task.createdTime}"></span>
                             </div>
                             <div class="description">

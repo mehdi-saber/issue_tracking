@@ -25,6 +25,7 @@ public class AdminController {
     private final SubCategoryService subCategoryService;
     private final SmsLevelService smsLevelService;
     private final EmailLevelService emailLevelService;
+    private final LeaveService leaveService;
 
     private final CommentService commentService;
 
@@ -37,7 +38,7 @@ public class AdminController {
     private final TaskService taskService;
 
     @Autowired
-    public AdminController(TaskService taskService, UserManager userManager, CommentService commentService, SubCategoryService subCategoryService, RoleService roleService, TagService tagService, CategoryService categoryService, SmsLevelService smsLevelService, EmailLevelService emailLevelService) {
+    public AdminController(TaskService taskService, UserManager userManager, CommentService commentService, SubCategoryService subCategoryService, RoleService roleService, TagService tagService, CategoryService categoryService, SmsLevelService smsLevelService, EmailLevelService emailLevelService ,LeaveService leaveService) {
         this.taskService = taskService;
         this.userManager = userManager;
         this.commentService = commentService;
@@ -47,6 +48,7 @@ public class AdminController {
         this.categoryService = categoryService;
         this.smsLevelService = smsLevelService;
         this.emailLevelService = emailLevelService;
+        this.leaveService = leaveService;
     }
 
 
@@ -130,6 +132,13 @@ view.addObject("accountSelected","active");
         ModelAndView view = new ModelAndView();
         view.addObject("settingSelected","active");
         view.addObject("tag",new Tag());
+        return view;
+    }
+    @RequestMapping(value = "admin/leave")
+    public ModelAndView leaves(){
+        ModelAndView view = new ModelAndView();
+        view.addObject("settingSelected","active");
+        view.addObject("leave",new Leave());
         return view;
     }
     @PostMapping(value = "admin/tags")

@@ -1,7 +1,5 @@
 package com.atrosys.platform.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.atrosys.platform.Constants;
@@ -10,6 +8,7 @@ import com.atrosys.platform.model.to.Role;
 import com.atrosys.platform.model.to.User;
 import com.atrosys.platform.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +33,7 @@ public class LoginController {
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
+//        System.out.println(new BCryptPasswordEncoder().encode("1234"));
         return modelAndView;
     }
 
@@ -86,6 +86,7 @@ public class LoginController {
     //todo: get json as encrypt
     @RequestMapping(value = "/createAccountJson", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public void saveUserJson(@RequestBody User user, BindingResult bindingResult) {
+        //ModelAndView modelAndView = new ModelAndView();
         User userExists = userService.findUserByEmail(user.getEmail());
         if (userExists != null) {
             bindingResult
@@ -102,4 +103,3 @@ public class LoginController {
 
 
 }
-

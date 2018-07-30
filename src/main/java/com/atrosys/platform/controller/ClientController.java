@@ -45,6 +45,12 @@ public class ClientController {
     UserManager userManager;
     @Autowired
     Scheduler scheduler;
+
+
+    Task selectedTask;
+
+
+
     private final StorageService storageService;
 
     @Autowired
@@ -57,35 +63,35 @@ public class ClientController {
     }
 
 
-    @RequestMapping(value="/client/index", method = RequestMethod.GET)
-    public ModelAndView clientHome(){
+    @RequestMapping(value = "/client/index", method = RequestMethod.GET)
+    public ModelAndView clientHome() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user =userManager.getCurrentUser(SecurityContextHolder.getContext());
+        User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
         ModelAndView view = new ModelAndView();
-        view.addObject("task",new Task());
+        view.addObject("task", new Task());
         view.setViewName("client/index");
-        view.addObject("categories",categoryService.findAllCategories());
+        view.addObject("categories", categoryService.findAllCategories());
         List<Task> tasks = taskService.findAllByCreator(user);
         List<Task> pendingTasks = new ArrayList<>();
         List<Task> workingTasks = new ArrayList<>();
         List<Task> doneTasks = new ArrayList<>();
-        for (Task task:tasks){
+        for (Task task : tasks) {
             TaskHistory taskHistory = taskHistoryService.findLastChangeStatusByTask(task);
             List<TaskHistory> histories = new ArrayList<>();
-            if (taskHistory.getDescription().equals("0")){
+            if (taskHistory.getDescription().equals("0")) {
                 histories.add(taskHistory);
                 task.setTaskHistories(histories);
                 pendingTasks.add(task);
             }
-            histories = taskHistoryService.findByStatusAndDescriptionAndTask(TaskHistory.STATUS_STATUS_CHANGED,"1",task);
-            if (taskHistory.getDescription().equals("1")){
+            histories = taskHistoryService.findByStatusAndDescriptionAndTask(TaskHistory.STATUS_STATUS_CHANGED, "1", task);
+            if (taskHistory.getDescription().equals("1")) {
                 histories.add(taskHistory);
                 task.setTaskHistories(histories);
                 workingTasks.add(task);
             }
-            histories = taskHistoryService.findByStatusAndDescriptionAndTask(TaskHistory.STATUS_STATUS_CHANGED,"2",task);
-            if (taskHistory.getDescription().equals("2")){
+            histories = taskHistoryService.findByStatusAndDescriptionAndTask(TaskHistory.STATUS_STATUS_CHANGED, "2", task);
+            if (taskHistory.getDescription().equals("2")) {
                 histories.add(taskHistory);
                 task.setTaskHistories(histories);
                 doneTasks.add(task);
@@ -114,26 +120,29 @@ public class ClientController {
             }
         });
 
-          if (pendingTasks.size()!=0) view.addObject("pendingTasks",pendingTasks);
-        if (workingTasks.size()!=0) view.addObject("workingTasks",workingTasks);
-       if (doneTasks.size()!=0)view.addObject("doneTasks",doneTasks);
+        if (pendingTasks.size() != 0) view.addObject("pendingTasks", pendingTasks);
+        if (workingTasks.size() != 0) view.addObject("workingTasks", workingTasks);
+        if (doneTasks.size() != 0) view.addObject("doneTasks", doneTasks);
 
 
         return view;
     }
+
     @PostMapping(value = "client/index/category={id}")
-    public ModelAndView getSubcategories(@PathVariable("id")int id){
+    public ModelAndView getSubcategories(@PathVariable("id") int id) {
         ModelAndView view = new ModelAndView();
-        view.addObject("subcategories",subCategoryService.findSubCategoriesByParent(categoryService.findCategoryById(id)));
-        view.addObject("task",new Task());
+        view.addObject("subcategories", subCategoryService.findSubCategoriesByParent(categoryService.findCategoryById(id)));
+        view.addObject("task", new Task());
         view.setViewName("client/index::subcategories");
         return view;
     }
+
     @PostMapping("/client/index")
-    public ModelAndView addTask(@RequestParam("file") MultipartFile file,@ModelAttribute Task task) {
+    public ModelAndView addTask(@RequestParam("file") MultipartFile file, @ModelAttribute Task task) {
 
 
-ModelAndView view = new ModelAndView();
+
+        ModelAndView view = new ModelAndView();
 
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
 
@@ -149,16 +158,15 @@ ModelAndView view = new ModelAndView();
         task = taskService.save(task);
 
         if (!file.isEmpty()) {
-String name = file.getOriginalFilename().substring(0,file.getOriginalFilename().lastIndexOf("."));
-String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."),file.getOriginalFilename().length());
+            String name = file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."));
+            String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."), file.getOriginalFilename().length());
 
 
-String fileName = name+task.getId()+type;
+            String fileName = name + task.getId() + type;
 
-            storageService.store(file,fileName);
-                task.setAttachment(fileName);
-                taskService.save(task);
-
+            storageService.store(file, fileName);
+            task.setAttachment(fileName);
+            taskService.save(task);
 
 
         }
@@ -168,23 +176,23 @@ String fileName = name+task.getId()+type;
         history.setDescription("0");
         history.setTask(task);
         taskHistoryService.save(history);
-        view.addObject("task",new Task());
+        view.addObject("task", new Task());
         view.setViewName("redirect:/client/index");
         messagingTemplate.convertAndSend("/topic/greetings", 1);
 
-JobDataMap map =  new JobDataMap();
-map.put("taskService",taskService);
+        JobDataMap map = new JobDataMap();
+        map.put("taskService", taskService);
         // define the job and tie it to our HelloJob class
         JobDetail job = newJob(TestJob.class)
-                .withIdentity("Job"+task.getId(), "group"+task.getId())
+                .withIdentity("Job" + task.getId(), "group" + task.getId())
                 .usingJobData("id", task.getId())
                 .usingJobData(map)
                 .build();
 
         // Trigger the job to run now, and then every 40 seconds
         Trigger trigger = newTrigger()
-                .withIdentity("Trigger"+task.getId(), "group"+task.getId())
-                .startAt(DateUtil.moveToDateFromCurrentDate(0,0,1).getTime())
+                .withIdentity("Trigger" + task.getId(), "group" + task.getId())
+                .startAt(DateUtil.moveToDateFromCurrentDate(0, 0, 1).getTime())
 
                 .build();
         // Tell quartz to schedule the job using our trigger
@@ -197,4 +205,17 @@ map.put("taskService",taskService);
 
         return view;
     }
+
+
+    @RequestMapping(value ="/client/test-task", method = RequestMethod.GET)
+    public ModelAndView showTask(@RequestParam("id") long id){
+
+        ModelAndView modelAndView = new ModelAndView();
+        Task task = taskService.findTaskById((int)id);
+        modelAndView.addObject("task" , task);
+        modelAndView.setViewName("client/test-task");
+//        selectedTask\
+        return modelAndView;
+    }
 }
+
