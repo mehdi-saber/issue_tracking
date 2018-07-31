@@ -1,9 +1,11 @@
 package com.atrosys.platform.model.service;
 
 import com.atrosys.platform.model.da.repository.SubCategoryRepository;
+import com.atrosys.platform.model.da.repository.TaskRepository;
 import com.atrosys.platform.model.to.Category;
 import com.atrosys.platform.model.to.SubCategory;
 import com.atrosys.platform.model.to.Tag;
+import com.atrosys.platform.model.to.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class SubCategoryServiceImpl implements SubCategoryService {
     @Autowired
     SubCategoryRepository subCategoryRepository;
+
     @Override
     public void save(SubCategory subCategory) {
         subCategoryRepository.save(subCategory);
@@ -35,4 +38,6 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public List<SubCategory> findAllByTags(List<Tag> tags) {
         return subCategoryRepository.findByTags(tags);
     }
+
+
 }

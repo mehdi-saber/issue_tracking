@@ -16,73 +16,92 @@
         <div class="five wide column"></div>
         <div class="six wide column" th:fragment="taskDetails" id="taskDetails">
 
-            <form class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}"
-                  th:object="${task}">
-                <h2 class="ui icon header" style="display: block">
+            <!--<form class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}"-->
+            <!--th:object="${task}">-->
+            <h2 class="ui icon header" style="display: block">
 
-                    <i class="tasks icon"></i>
-
-
-                    <div class="content">
-                        <span th:text="#{operator.index.task.details}"></span>
-
-                    </div>
-                </h2>
-                <div class="ui raised piled segment">
-                    <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span></h4>
-
-                    <div class="field">
-                        <label><span th:text="#{operator.index.category.title}"></span> </label>
-                        <span th:text="${task.subCategory.category.title}"></span>
-                    </div>
-                    <div class="field" th:fragment="subcategories" id="subcategories">
-                        <label><span th:text="#{operator.index.subject.title}"></span> </label>
-                        <span th:text="${task.subCategory.title}"></span>
-                    </div>
+                <i class="tasks icon"></i>
 
 
-                    <div class="two fields" th:if="${#locale.getLanguage().equals('en')}">
-                        <div class="field">
-                            <label><span th:text="#{operator.index.title}"></span> </label>
-                            <span th:text="${task.title}"></span>
-                        </div>
-                        <div class="field">
-                            <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
-                                    class="attach icon"></i> </a>
-                        </div>
-                    </div>
-
-
-                    <div class="two fields" th:if="${#locale.getLanguage().equals('fa')}">
-                        <div class="field">
-                            <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
-                                    class="attach icon"></i> </a>
-                        </div>
-                        <div class="field">
-                            <label><span th:text="#{operator.index.title}"></span> </label>
-                            <span th:text="${task.title}" th:readonly=""></span>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label><span th:text="#{operator.index.description.title}"></span> </label>
-                        <textarea th:if="${edit}" style="margin-top: 0px; margin-bottom: 0px; height: 112px;"
-                                  id="description" readonly></textarea>
-                        <span  th:text="${task.content}"></span>
-                    </div>
-
-
-                    <div class="field">
-
-                    </div>
+                <div class="content">
+                    <span th:text="#{operator.index.task.details}"></span>
 
                 </div>
-            </form>
+            </h2>
+            <div class="ui raised piled segment">
+                <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span></h4>
+
+                <div class="field">
+                    <h4><span th:text="#{operator.index.category.title}"></span></h4>
+                    <span th:text="${task.subCategory.category.title}"></span>
+                </div>
+                <br>
+                <br>
+                <div class="field" th:fragment="subcategory" id="subcategory">
+                    <h4><span th:text="#{operator.index.subject.title}"></span></h4>
+                    <span th:text="${task.subCategory.title}"></span>
+                </div>
+                <br>
+                <br>
+                <div class="field" id="subject">
+                    <h4><span th:text="#{client.tasks.select.subject.title}"></span></h4>
+                    <span th:text="${task.title}"></span>
+                </div>
+                <br>
+                <br>
+                <div class="field" id="description">
+                    <h4><span th:text="#{operator.index.description.title}"></span></h4>
+                    <span th:text="${task.content}"></span>
+                </div>
+                <br>
+                <br>
+
+
+            </div>
         </div>
         <div class="five wide column"></div>
-
-
     </div>
 </div>
 
+
+
+<style>
+    .ui.fixed.sticky + p {
+        margin-top: 39px;
+    }
+
+     .footer1 {
+         position: fixed!important;
+         left: 0;
+         right: 0;
+         bottom: 10px;
+         /*width: 100vw;*/
+         background-color: black;
+         color: white;
+         text-align: center;
+     }
+
+
+</style>
+<div class=" footer1 ui inverted segment fixed sticky bottom centered grid" >
+
+    <form class="ui form">
+        <div class="field">
+            <label><span th:text="#{client.tasks.description.title}"></span> </label>
+            <textarea rows="1" style="margin-top: 0px; margin-bottom: 10px;width: 85vw; height: 50px;" id="chat"></textarea>
+        </div>
+    </form>
+</div>
+
+<footer class="atrofooter">
+    <div th:include="client/fragment/footer :: footer"></div>
+</footer>
+
+
+<script>
+    $('.ui.sticky')
+        .sticky()
+    ;
+</script>
 </body>
 </html>

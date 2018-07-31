@@ -3,6 +3,7 @@ package com.atrosys.platform.model.service;
 import com.atrosys.platform.model.to.Category;
 import com.atrosys.platform.model.to.SubCategory;
 import com.atrosys.platform.model.to.Tag;
+import com.atrosys.platform.model.to.Task;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface SubCategoryService {
     List<SubCategory> findSubCategoriesByParent(Category category);
     SubCategory findSubCategoryByTitle(String title);
     List<SubCategory> findAllByTags(List<Tag> tags);
+
 }

@@ -207,13 +207,14 @@ public class ClientController {
     }
 
 
-    @RequestMapping(value ="/client/test-task", method = RequestMethod.GET)
+    @RequestMapping(value ="/client/taskv", method = RequestMethod.GET)
     public ModelAndView showTask(@RequestParam("id") long id){
 
         ModelAndView modelAndView = new ModelAndView();
         Task task = taskService.findTaskById((int)id);
         modelAndView.addObject("task" , task);
-        modelAndView.setViewName("client/test-task");
+        modelAndView.setViewName("client/taskv");
+        modelAndView.addObject("subcategory",task.getSubCategory());
 //        selectedTask\
         return modelAndView;
     }
