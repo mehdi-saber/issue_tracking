@@ -51,8 +51,8 @@ public class OperatorController {
         this.storageService = storageService;
     }
 
-    @RequestMapping(value="/operator/index", method = RequestMethod.GET)
-    public ModelAndView operatorHome(){
+    @RequestMapping(value = "/operator/index", method = RequestMethod.GET)
+    public ModelAndView operatorHome() {
         ModelAndView modelAndView = new ModelAndView();
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
 
@@ -77,18 +77,19 @@ public class OperatorController {
         });
 
 
-        modelAndView.addObject("pendingTasks",pendingTasks);
-        modelAndView.addObject("workingTasks",workingTasks);
-        modelAndView.addObject("doneTasks",doneTasks);
-        modelAndView.addObject("unassignedTasks",unassignedTasks);
+        modelAndView.addObject("pendingTasks", pendingTasks);
+        modelAndView.addObject("workingTasks", workingTasks);
+        modelAndView.addObject("doneTasks", doneTasks);
+        modelAndView.addObject("unassignedTasks", unassignedTasks);
         modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
+        modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
         modelAndView.setViewName("operator/index");
-        modelAndView.addObject("homeSelected","active");
+        modelAndView.addObject("homeSelected", "active");
         return modelAndView;
     }
+
     @PostMapping(value = "/operator/index/getNewTask")
-    public ModelAndView getNewTask(){
+    public ModelAndView getNewTask() {
         ModelAndView modelAndView = new ModelAndView();
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
 
@@ -103,19 +104,20 @@ public class OperatorController {
             }
         });
 
-if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIgnoreCase("persian")){
-   modelAndView.setViewName("/operator/index :: unassignedFragmentFa");
-}else {
-    modelAndView.setViewName("/operator/index :: unassignedFragmentEn");
-}
-        modelAndView.addObject("unassignedTasks",unassignedTasks);
+        if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIgnoreCase("persian")) {
+            modelAndView.setViewName("/operator/index :: unassignedFragmentFa");
+        } else {
+            modelAndView.setViewName("/operator/index :: unassignedFragmentEn");
+        }
+        modelAndView.addObject("unassignedTasks", unassignedTasks);
 
 
         return modelAndView;
     }
+
     @PostMapping(value = "/operator/index/sort={id}")
-    public ModelAndView getSortedPendingTasks(@PathVariable("id") int id){
-        if (id==1){
+    public ModelAndView getSortedPendingTasks(@PathVariable("id") int id) {
+        if (id == 1) {
             Collections.sort(pendingTasks, new Comparator<Task>() {
                 @Override
                 public int compare(Task lhs, Task rhs) {
@@ -123,7 +125,7 @@ if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIg
                     return lhs.getCreatedTime().after(rhs.getCreatedTime()) ? -1 : (lhs.getCreatedTime().before(rhs.getCreatedTime())) ? 1 : 0;
                 }
             });
-        }else if (id==2){
+        } else if (id == 2) {
             Collections.sort(pendingTasks, new Comparator<Task>() {
                 @Override
                 public int compare(Task lhs, Task rhs) {
@@ -133,88 +135,92 @@ if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIg
             });
         }
         ModelAndView view = new ModelAndView();
-        view.addObject("pendingTasks",pendingTasks);
-        if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIgnoreCase("persian")){
+        view.addObject("pendingTasks", pendingTasks);
+        if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIgnoreCase("persian")) {
             view.setViewName("/operator/index :: pendingFragmentFa");
-        }else {
+        } else {
             view.setViewName("/operator/index :: pendingFragmentEn");
         }
         return view;
     }
+
     @PostMapping(value = "/operator/index/task={id}")
-    public ModelAndView getTaskDetails(@PathVariable("id") int id){
+    public ModelAndView getTaskDetails(@PathVariable("id") int id) {
         selectedTask = taskService.findTaskById(id);
         ModelAndView view = new ModelAndView();
-        view.addObject("task",selectedTask);
-        view.addObject("users",userManager.getAllActiveUsersExceptClients());
+        view.addObject("task", selectedTask);
+        view.addObject("users", userManager.getAllActiveUsersExceptClients());
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
         Tag editTag = tagService.findByTagName("Edit");
-        if (editTag!=null && user.getTags().contains(editTag)){
-            view.addObject("edit",true);
-        }else {
-            view.addObject("edit",false);
+        if (editTag != null && user.getTags().contains(editTag)) {
+            view.addObject("edit", true);
+        } else {
+            view.addObject("edit", false);
         }
 
         view.setViewName("operator/index::taskDetails");
         return view;
     }
+
     @PostMapping(value = "/operator/index")
-    public ModelAndView updateTask(@ModelAttribute Task task){
-        if (task.getPriority()!=selectedTask.getPriority()){
+    public ModelAndView updateTask(@ModelAttribute Task task) {
+        if (task.getPriority() != selectedTask.getPriority()) {
             selectedTask.setPriority(task.getPriority());
             TaskHistory history = new TaskHistory();
             history.setCreatedTime(new Timestamp(System.currentTimeMillis()));
             history.setTask(selectedTask);
             history.setStatus(TaskHistory.STATUS_PRIORITY_CHANGED);
-            history.setDescription(task.getPriority()+"");
+            history.setDescription(task.getPriority() + "");
             historyService.save(history);
 
         }
         List<String> newList = new ArrayList<>();
-        for (User user: task.getAssignTos()){
-           try {
-               newList.add(user.getEmail());
-           }catch (Exception e){}
+        for (User user : task.getAssignTos()) {
+            try {
+                newList.add(user.getEmail());
+            } catch (Exception e) {
+            }
         }
         List<String> oldList = new ArrayList<>();
-        for (User user:selectedTask.getAssignTos()){
+        for (User user : selectedTask.getAssignTos()) {
             try {
                 oldList.add(user.getEmail());
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
-       if (!newList.containsAll(oldList) || oldList.size()!=newList.size()){
-           selectedTask.setAssignTos(task.getAssignTos());
-           TaskHistory history = new TaskHistory();
-           history.setCreatedTime(new Timestamp(System.currentTimeMillis()));
-           history.setTask(selectedTask);
-           history.setStatus(TaskHistory.STATUS_ASSIGN_CHANGED);
-           for (User user:task.getAssignTos()){
-             try {
-                 if (history.getDescription()!=null)
-                 history.setDescription(history.getDescription()+"-"+user.getEmail());
-                 else
-                     history.setDescription(user.getEmail());
-             }catch (Exception e){
-                 history.setDescription("UNASSIGNED");
-             }
-           }
-           historyService.save(history);
-       }
+        if (!newList.containsAll(oldList) || oldList.size() != newList.size()) {
+            selectedTask.setAssignTos(task.getAssignTos());
+            TaskHistory history = new TaskHistory();
+            history.setCreatedTime(new Timestamp(System.currentTimeMillis()));
+            history.setTask(selectedTask);
+            history.setStatus(TaskHistory.STATUS_ASSIGN_CHANGED);
+            for (User user : task.getAssignTos()) {
+                try {
+                    if (history.getDescription() != null)
+                        history.setDescription(history.getDescription() + "-" + user.getEmail());
+                    else
+                        history.setDescription(user.getEmail());
+                } catch (Exception e) {
+                    history.setDescription("UNASSIGNED");
+                }
+            }
+            historyService.save(history);
+        }
 
-        if (selectedTask.getStatus()!=task.getStatus()){
+        if (selectedTask.getStatus() != task.getStatus()) {
             selectedTask.setStatus(task.getStatus());
             selectedTask.setStatusChangeTime(new Timestamp(System.currentTimeMillis()));
             TaskHistory history = new TaskHistory();
             history.setCreatedTime(new Timestamp(System.currentTimeMillis()));
             history.setTask(selectedTask);
             history.setStatus(TaskHistory.STATUS_STATUS_CHANGED);
-            history.setDescription(task.getStatus()+"");
+            history.setDescription(task.getStatus() + "");
             historyService.save(history);
         }
-        if (task.getContent()!=null){
+        if (task.getContent() != null) {
             User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
             Tag editTag = tagService.findByTagName("Edit");
-            if (editTag!=null&& user.getTags().contains(editTag))
+            if (editTag != null && user.getTags().contains(editTag))
                 selectedTask.setContent(task.getContent());
         }
         taskService.save(selectedTask);
@@ -222,11 +228,20 @@ if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIg
         view.setViewName("redirect:/operator/index");
         return view;
     }
-    @PostMapping(value = "/operator/index/comment={message}")
-    public ModelAndView addComment(@PathVariable("message") String message){
+
+    @PostMapping(value = "/operator/index/comment")
+    public ModelAndView addComment(@RequestParam("message") String message, @RequestParam("access2client") String access2client) {
         ModelAndView view = new ModelAndView();
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
         TaskComment comment = new TaskComment();
+
+        if (access2client.equals("on")) {
+            comment.setAccessOfClient(true);
+
+
+        }
+        else
+            comment.setAccessOfClient(false);
         comment.setCreatedBy(user);
         comment.setMessage(message);
         comment.setCreatedTime(new Timestamp(System.currentTimeMillis()));
@@ -234,7 +249,7 @@ if (LocaleContextHolder.getLocaleContext().getLocale().getDisplayName().equalsIg
         comments.add(commentService.save(comment));
         selectedTask.setComments(comments);
         selectedTask = taskService.save(selectedTask);
-        view.addObject("task",selectedTask);
+        view.addObject("task", selectedTask);
         view.setViewName("operator/index::commentsFragment");
         return view;
 

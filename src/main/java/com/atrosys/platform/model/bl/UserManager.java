@@ -61,7 +61,8 @@ public class UserManager {
        List<User> availableUsers = daysService.findAvailableUsers(tags);
        List<User> selectedUsers = new ArrayList<>();
        Role operator = roleService.findByRoleName(Constants.ROLE_OPERATOR);
-       for (User user:availableUsers){
+       //TODO make this available users
+       for (User user:userService.findAll()){
            if (user.getRoles().contains(operator)){
 
                selectedUsers.add(user);
@@ -86,6 +87,7 @@ public class UserManager {
            return 0;
        });
        //TODO if there is no available user, send it for manager
+       System.out.println(selectedUsers.get(0).getEmail());
        return selectedUsers.get(0);
    }
 

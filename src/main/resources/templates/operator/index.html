@@ -44,18 +44,18 @@
                 })
             })
         }
-$(document).ready(function () {
-    var socket = new SockJS('/socket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+        $(document).ready(function () {
+            var socket = new SockJS('/socket');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
 
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
-    });
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/greetings', function (greeting) {
+                    showGreeting(JSON.parse(greeting.body).content);
+                });
+            });
 
-})
+        })
         $(document).ready(function () {
 
             $('.ui .dropdown').dropdown();
@@ -69,7 +69,7 @@ $(document).ready(function () {
         });
         function sortPendingTasks(type) {
             $.ajax({
-                url: "index/sort="+type,
+                url: "index/sort=" + type,
 
                 type: "POST",
                 dataType: "html",
@@ -92,8 +92,7 @@ $(document).ready(function () {
         function showTaskDetails() {
             $('.card ').click(function () {
                 $.ajax({
-                    url: "index/task="+this.id,
-
+                    url: "index/task=" + this.id,
                     type: "POST",
                     dataType: "html",
                     success: function (data) {
@@ -118,21 +117,19 @@ $(document).ready(function () {
         }
         function addComment() {
             $('#addComment ').click(function () {
-                if ($('#commentTextArea').val()!=''){
+                var ch = $('input[name=checkbox]').value;
+                if ($('#commentTextArea').val() != '') {
                     $.ajax({
-                        url: "index/comment="+$('#commentTextArea').val(),
-
+                        url: "index/comment?message=" + $('#commentTextArea').val()+"&access2client="+ $('input[name="checkbox"]:checked').val(),
                         type: "POST",
                         dataType: "html",
                         success: function (data) {
-
                             $('#commentsDetails').html(data);
-
                             $('#commentTextArea').val('');
-
                         },
                         error: function (xhr, status) {
                             alert(status);
+                            alert(xhr);
                         },
                         complete: function (xhr, status) {
 
@@ -155,13 +152,13 @@ $(document).ready(function () {
 <div class="atrocontent">
 
     <div th:if="${#locale.getLanguage().equals('fa')}">
-        <div class="ui centered center floated center aligned basic modal" style="width: 100%" >
+        <div class="ui centered center floated center aligned basic modal" style="width: 100%">
             <div class="ui icon header" style="border-bottom: none">
                 <i class="write icon"></i>
                 <span th:text="#{operator.index.confirm.dialog.update.task.title}"></span>
             </div>
             <div class="content" style="text-align:center;">
-                <h3><span th:text="#{operator.index.confirm.dialog.content}"></span> </h3>
+                <h3><span th:text="#{operator.index.confirm.dialog.content}"></span></h3>
             </div>
             <div class="actions" style="text-align: center;border-top: none">
                 <div class="ui inverted red basic cancel  button">
@@ -177,13 +174,13 @@ $(document).ready(function () {
         </div>
     </div>
     <div th:if="${#locale.getLanguage().equals('en')}">
-        <div class="ui centered center floated center aligned basic modal"  >
+        <div class="ui centered center floated center aligned basic modal">
             <div class="ui icon header" style="border-bottom: none">
                 <i class="write icon"></i>
                 <span th:text="#{operator.index.confirm.dialog.update.task.title}"></span>
             </div>
             <div class="content" style="text-align:center;">
-                <h3><span th:text="#{operator.index.confirm.dialog.content}"></span> </h3>
+                <h3><span th:text="#{operator.index.confirm.dialog.content}"></span></h3>
             </div>
             <div class="actions" style="text-align: center;border-top: none">
                 <div class="ui inverted red basic cancel  button">
@@ -200,15 +197,13 @@ $(document).ready(function () {
     </div>
 
 
-
-
-
     <div class="ui centered grid">
         <div class="row">
             <div class="five wide column"></div>
             <div class="six wide column" th:fragment="taskDetails" id="taskDetails">
 
-                <form  class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}" th:object="${task}">
+                <form class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}"
+                      th:object="${task}">
                     <h2 class="ui icon header" style="display: block">
 
                         <i class="tasks icon"></i>
@@ -220,7 +215,7 @@ $(document).ready(function () {
                         </div>
                     </h2>
                     <div class="ui raised piled segment">
-                        <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span> </h4>
+                        <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span></h4>
 
                         <div class="field">
                             <label><span th:text="#{operator.index.category.title}"></span> </label>
@@ -231,37 +226,40 @@ $(document).ready(function () {
                             <span th:text="${task.subCategory.title}"></span>
                         </div>
                         <div class="two fields" th:if="${#locale.getLanguage().equals('en')}">
-                            <div class="field" >
+                            <div class="field">
                                 <label><span th:text="#{operator.index.title}"></span> </label>
                                 <span th:text="${task.title}"></span>
                             </div>
 
-                                <div class="field">
-                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i class="attach icon" ></i> </a>
+                            <div class="field">
+                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
+                                        class="attach icon"></i> </a>
 
-                                </div>
+                            </div>
 
                         </div>
                         <div class="two fields" th:if="${#locale.getLanguage().equals('fa')}">
                             <div class="field">
-                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i class="attach icon" ></i> </a>
+                                <a th:href="${'index/'+task.attachment}" th:if="${task.attachment!=null}"> <i
+                                        class="attach icon"></i> </a>
 
                             </div>
-                            <div class="field" >
+                            <div class="field">
                                 <label><span th:text="#{operator.index.title}"></span> </label>
                                 <span th:text="${task.title}"></span>
                             </div>
                         </div>
                         <div class="field">
                             <label><span th:text="#{operator.index.description.title}"></span> </label>
-                            <textarea th:if="${edit}" style="margin-top: 0px; margin-bottom: 0px; height: 112px;" id="description" th:field="*{content}"></textarea>
+                            <textarea th:if="${edit}" style="margin-top: 0px; margin-bottom: 0px; height: 112px;"
+                                      id="description" th:field="*{content}"></textarea>
                             <span th:if="${!edit}" th:text="${task.content}"></span>
                         </div>
 
                         <div class="two fields">
                             <div class="field">
                                 <label><span th:text="#{operator.index.priority.title}"></span> </label>
-                                <div class="ui selection dropdown" >
+                                <div class="ui selection dropdown">
                                     <input type="hidden" th:field="*{priority}" id="prioritySelect">
                                     <div class="default text">select priority</div>
                                     <i class="dropdown icon"></i>
@@ -300,7 +298,7 @@ $(document).ready(function () {
                             </div>
                             <div class="field">
                                 <label><span th:text="#{operator.index.status.title}"></span> </label>
-                                <div class="ui selection dropdown" >
+                                <div class="ui selection dropdown">
                                     <input type="hidden" th:field="*{status}" id="status">
                                     <div class="default text">select priority</div>
                                     <i class="dropdown icon"></i>
@@ -341,31 +339,36 @@ $(document).ready(function () {
                         <div class="field">
                             <label><span th:text="#{operator.index.assignTo.title}"></span> </label>
                             <div class="ui fluid multiple search normal selection dropdown">
-                                <input type="hidden" th:field="*{assignTos}"  id="userSelect">
+                                <input type="hidden" th:field="*{assignTos}" id="userSelect">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">users</div>
                                 <div th:if="${#locale.getLanguage().equals('en')}" class="menu">
-                                    <div class="item" th:each="user:${users}"  th:attr="data-value=${user.id}"><i class="user icon"></i><span th:text="${user.email}"></span> </div>
+                                    <div class="item" th:each="user:${users}" th:attr="data-value=${user.id}"><i
+                                            class="user icon"></i><span th:text="${user.email}"></span></div>
 
 
                                 </div>
                                 <div th:if="${#locale.getLanguage().equals('fa')}" class="menu">
-                                    <div class="item" th:each="user:${users}"  th:attr="data-value=${user.id}"><span th:text="${user.email}"></span> <i class="user icon"></i></div>
+                                    <div class="item" th:each="user:${users}" th:attr="data-value=${user.id}"><span
+                                            th:text="${user.email}"></span> <i class="user icon"></i></div>
 
 
                                 </div>
                             </div>
                         </div>
                         <div id="updateButton" class="ui grey labeled icon  button">
-                            <i class="edit icon"></i> <span th:text="#{operator.index.update.button.title}"></span> </div>
+                            <i class="edit icon"></i> <span th:text="#{operator.index.update.button.title}"></span>
+                        </div>
                         <div class="ui error message"></div>
                     </div>
                 </form>
 
-                <div class="ui raised segment" th:if="${task!=null}">
-                    <div class="ui comments"  th:object="${task}" th:fragment="commentsFragment" id="commentsDetails">
 
-                        <div class="comment" th:if="${task.comments!=null && task.comments.size()>0}" th:each="comment:${task.comments}">
+                <div class="ui raised segment" th:if="${task!=null}">
+                    <div class="ui comments" th:object="${task}" th:fragment="commentsFragment" id="commentsDetails">
+
+                        <div class="comment" th:if="${task.comments!=null && task.comments.size()>0}"
+                             th:each="comment:${task.comments}">
                             <a class="avatar">
                                 <img th:src="@{/img/avatar.svg}">
                             </a>
@@ -376,7 +379,6 @@ $(document).ready(function () {
                                 </div>
                                 <div class="text">
                                     <p th:text="${comment.message}"></p>
-
                                 </div>
 
                             </div>
@@ -385,39 +387,32 @@ $(document).ready(function () {
                                     <div class="date"><span th:text="${comment.createdTime}"></span></div>
                                 </div>
                                 <a class="author"><span th:text="${comment.createdBy.email}"></span></a>
-
                                 <div class="text">
                                     <p th:text="${comment.message}"></p>
-
+                                    <i th:if="${comment.accessOfClient}==true" class="bullhorn icon"></i>
                                 </div>
 
                             </div>
                         </div>
-
-
-
                     </div>
-
-
-
-
 
 
                     <form class="ui reply form">
                         <div class="field">
                             <textarea id="commentTextArea" style="min-height: 6em;height: 80px"></textarea>
                         </div>
+
+                        <div class="ui left floated compact ">
+                            <div class="ui  toggle checkbox" name="checkbox"  >
+                                <input name="checkbox" type="checkbox"  id="access2client">
+                                <label th:text="#{operator.comment.access.to.client}"></label>
+                            </div>
+                        </div>
+
                         <div class="ui primary  labeled icon button" id="addComment">
                             <i class="icon edit"></i> <span th:text="#{operator.index.addComment.button.title}"></span>
                         </div>
                     </form>
-
-
-
-
-
-
-
 
 
                 </div>
@@ -428,358 +423,68 @@ $(document).ready(function () {
     </div>
 
 
-
-
-
-
-
-    <div class="ui centered grid" >
+    <div class="ui centered grid">
         <div class="row" th:if="${#locale.getLanguage().equals('en')}">
 
-           <div class="three wide column">
+            <div class="three wide column">
 
-               <h4 class="ui icon header" style="display: block">
+                <h4 class="ui icon header" style="display: block">
 
-                   <i class="hourglass empty icon"></i>
+                    <i class="hourglass empty icon"></i>
 
 
-                   <div class="content">
-                       <span th:text="#{operator.index.status.unassigned}"></span>
+                    <div class="content">
+                        <span th:text="#{operator.index.status.unassigned}"></span>
 
-                   </div>
-               </h4>
-               <div class="ui invisible floating dropdown" >
-                   <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
-                   <div class="menu">
-                       <div class="item" ><span th:text="#{operator.index.sort.newest.title}"></span> </div>
-                       <div class="item" ><span th:text="#{operator.index.sort.priority.title}"></span> </div>
+                    </div>
+                </h4>
+                <div class="ui invisible floating dropdown">
+                    <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item"><span th:text="#{operator.index.sort.newest.title}"></span></div>
+                        <div class="item"><span th:text="#{operator.index.sort.priority.title}"></span></div>
 
-                   </div>
-               </div>
-               <div  id="unAssignedSection" th:fragment="unassignedFragmentEn"  >
-                   <div class="ui centered link cards" th:if="${!unassignedTasks.isEmpty()}">
-                       <div class="card"  th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
+                    </div>
+                </div>
+                <div id="unAssignedSection" th:fragment="unassignedFragmentEn">
+                    <div class="ui centered link cards" th:if="${!unassignedTasks.isEmpty()}">
+                        <div class="card" th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
 
-                           <div class="content">
-                               <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                               <a th:if="${unassignedTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                               <a th:if="${unassignedTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                               <div class="header"><span th:text="${unassignedTask.subCategory.title}"></span><i class="attach icon" th:if="${unassignedTask.attachment!=null}"></i></div>
-                               <div class="meta">
-                                   <span th:text="${unassignedTask.subCategory.category.title}"></span> <br/>
-                                   <div th:if="${#locale.getLanguage().equals('en')}">
-                                       <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${unassignedTask.createdBy.email}"></span>
-                                   </div>
-                                   <div th:if="${#locale.getLanguage().equals('fa')}">
-                                       <span th:text="${unassignedTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                   </div>
-                               </div>
-                               <div class="description">
-                                   <p th:text="${unassignedTask.title}"></p>
-                               </div>
-                           </div>
-                           <div class="extra content">
+                            <div class="content">
+                                <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${unassignedTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${unassignedTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><span th:text="${unassignedTask.subCategory.title}"></span><i
+                                        class="attach icon" th:if="${unassignedTask.attachment!=null}"></i></div>
+                                <div class="meta">
+                                    <span th:text="${unassignedTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${unassignedTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${unassignedTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <p th:text="${unassignedTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
       <span class="right floated">
         <span th:text="${unassignedTask.createdTime.toString().split(' ')[0]}"></span>
       </span>
-                               <span>
-        <i class="comment icon"></i>
-                                <span th:text="${unassignedTask.comments.size()}"></span> <span th:if="${unassignedTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${unassignedTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
-      </span>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="one wide column"></div>
-           <div class="three wide column">
-
-               <h4 class="ui icon header" style="display: block">
-
-                   <i class="hourglass start icon"></i>
-
-
-                   <div class="content">
-                       <span th:text="#{operator.index.status.pending}"></span>
-
-                   </div>
-               </h4>
-               <div class="ui floating dropdown" id="sortby">
-                   <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
-                   <div class="menu">
-                       <div class="item" id="1"><span th:text="#{operator.index.sort.newest.title}"></span> </div>
-                       <div class="item" id="2"><span th:text="#{operator.index.sort.priority.title}"></span> </div>
-
-                   </div>
-               </div>
-               <div th:fragment="pendingFragmentEn" id="pendingSection" >
-                   <div class="ui centered link cards" th:if="${!pendingTasks.isEmpty()}">
-                       <div class="card" th:each="pendingTask:${pendingTasks}" th:id="${pendingTask.id}">
-
-                           <div class="content">
-                               <a th:if="${pendingTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                               <a th:if="${pendingTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                               <a th:if="${pendingTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                               <div class="header"><span th:text="${pendingTask.subCategory.title}"></span><i class="attach icon" th:if="${pendingTask.attachment!=null}"></i></div>
-                               <div class="meta">
-                                   <span th:text="${pendingTask.subCategory.category.title}"></span> <br/>
-                                   <div th:if="${#locale.getLanguage().equals('en')}">
-                                       <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${pendingTask.createdBy.email}"></span>
-                                   </div>
-                                   <div th:if="${#locale.getLanguage().equals('fa')}">
-                                       <span th:text="${pendingTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                   </div>
-                               </div>
-                               <div class="description">
-                                   <p th:text="${pendingTask.title}"></p>
-                               </div>
-                           </div>
-                           <div class="extra content">
-      <span class="right floated">
-        <span th:text="${pendingTask.createdTime.toString().split(' ')[0]}"></span>
-      </span>
-                               <span>
-        <i class="comment icon"></i>
-                                <span th:text="${pendingTask.comments.size()}"></span> <span th:if="${pendingTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${pendingTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
-      </span>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="one wide column"></div>
-           <div class="three wide column">
-               <h4 class="ui icon header" style="display: block">
-
-                   <i class=" hourglass half icon"></i>
-
-
-                   <div class="content">
-                       <span th:text="#{operator.index.status.working}"></span>
-
-                   </div>
-               </h4>
-               <div class="ui invisible floating dropdown" >
-                   sort by <i class="dropdown icon"></i>
-                   <div class="menu">
-
-
-                   </div>
-               </div>
-               <div th:fragment="workingSection" id="workingSection">
-                   <div class="ui centered link cards" th:if="${!workingTasks.isEmpty()}">
-                       <div class="card" th:each="workingTask:${workingTasks}" th:id="${workingTask.id}"  >
-
-                           <div class="content">
-                               <a th:if="${workingTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                               <a th:if="${workingTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                               <a th:if="${workingTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                               <div class="header"><span th:text="${workingTask.subCategory.title}"></span><i class="attach icon" th:if="${workingTask.attachment!=null}"></i></div>
-                               <div class="meta">
-                                   <span th:text="${workingTask.subCategory.category.title}"></span> <br/>
-                                   <div th:if="${#locale.getLanguage().equals('en')}">
-                                       <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${workingTask.createdBy.email}"></span>
-                                   </div>
-                                   <div th:if="${#locale.getLanguage().equals('fa')}">
-                                       <span th:text="${workingTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                   </div>
-                               </div>
-                               <div class="description">
-                                   <p th:text="${workingTask.title}"></p>
-                               </div>
-                           </div>
-                           <div class="extra content">
-      <span class="right floated">
-      <span th:text="${workingTask.createdTime.toString().split(' ')[0]}"></span>
-      </span>
-                               <span>
-        <i class="comment icon"></i>
-        <span th:text="${workingTask.comments.size()}"></span> <span th:if="${workingTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${workingTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
-      </span>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="one wide column"></div>
-           <div class="three wide column">
-               <h4 class="ui icon header" style="display: block">
-
-                   <i class=" hourglass end icon"></i>
-
-
-                   <div class="content">
-                       <span th:text="#{operator.index.status.done}"></span>
-
-                   </div>
-               </h4>
-               <div class="ui invisible floating dropdown" >
-                   sort by <i class="dropdown icon"></i>
-                   <div class="menu">
-
-
-                   </div>
-               </div>
-               <div th:fragment="doneSection" id="doneSection">
-
-
-
-                   <div class="ui centered link cards" th:if="${!doneTasks.isEmpty()}">
-                       <div class="card" th:each="doneTask:${doneTasks}" th:id="${doneTask.id}">
-
-                           <div class="content">
-                               <a th:if="${doneTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                               <a th:if="${doneTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                               <a th:if="${doneTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                               <div class="header"><span th:text="${doneTask.subCategory.title}"></span><i class="attach icon" th:if="${doneTask.attachment!=null}"></i></div>
-                               <div class="meta">
-                                   <span th:text="${doneTask.subCategory.category.title}"></span> <br/>
-                                   <div th:if="${#locale.getLanguage().equals('en')}">
-                                       <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${doneTask.createdBy.email}"></span>
-                                   </div>
-                                   <div th:if="${#locale.getLanguage().equals('fa')}">
-                                       <span th:text="${doneTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                   </div>
-                               </div>
-
-                               <div class="description">
-                                   <p th:text="${doneTask.title}"></p>
-                               </div>
-                           </div>
-                           <div class="extra content">
-      <span class="right floated">
-       <span th:text="${doneTask.createdTime.toString().split(' ')[0]}"></span>
-      </span>
-                               <span>
-        <i class="comment icon"></i>
-                                <span th:text="${doneTask.comments.size()}"></span>  <span th:if="${doneTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${doneTask.comments.size()<=1}" th:text="#{admin.index.comment.title}"></span>
-      </span>
-                           </div>
-                       </div>
-                   </div>
-
-
-
-
-               </div>
-
-           </div>
-
-        </div>
-        <div class="row" th:if="${#locale.getLanguage().equals('fa')}">
-
-
-            <div class="three wide column">
-                <h4 class="ui icon header" style="display: block">
-
-                    <i class=" hourglass end icon"></i>
-
-
-                    <div class="content">
-                        <span th:text="#{operator.index.status.done}"></span>
-
-                    </div>
-                </h4>
-                <div class="ui invisible floating dropdown" >
-                    sort by <i class="dropdown icon"></i>
-                    <div class="menu">
-
-
-                    </div>
-                </div>
-                <div th:fragment="doneSection" id="doneSection">
-
-
-
-                    <div class="ui centered link cards" th:if="${!doneTasks.isEmpty()}">
-                        <div class="card" th:each="doneTask:${doneTasks}" th:id="${doneTask.id}">
-
-                            <div class="content">
-                                <a th:if="${doneTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                                <a th:if="${doneTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                                <a th:if="${doneTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                                <div class="header"><i class="attach icon" th:if="${doneTask.attachment!=null}"></i><span th:text="${doneTask.subCategory.title}"></span></div>
-                                <div class="meta">
-                                    <span th:text="${doneTask.subCategory.category.title}"></span> <br/>
-                                    <div th:if="${#locale.getLanguage().equals('en')}">
-                                        <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${doneTask.createdBy.email}"></span>
-                                    </div>
-                                    <div th:if="${#locale.getLanguage().equals('fa')}">
-                                        <span th:text="${doneTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                    </div>
-                                </div>
-
-                                <div class="description">
-                                    <p th:text="${doneTask.title}"></p>
-                                </div>
-                            </div>
-                            <div class="extra content">
-      <span class="right floated">
-       <span th:text="${doneTask.createdTime.toString().split(' ')[0]}"></span>
-      </span>
                                 <span>
         <i class="comment icon"></i>
-                                <span th:text="${doneTask.comments.size()}"></span>  <span th:if="${doneTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${doneTask.comments.size()<=1}" th:text="#{admin.index.comment.title}"></span>
-      </span>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                </div>
-
-            </div>
-
-            <div class="one wide column"></div>
-            <div class="three wide column">
-                <h4 class="ui icon header" style="display: block">
-
-                    <i class=" hourglass half icon"></i>
-
-
-                    <div class="content">
-                        <span th:text="#{operator.index.status.working}"></span>
-
-                    </div>
-                </h4>
-                <div class="ui invisible floating dropdown" >
-                    sort by <i class="dropdown icon"></i>
-                    <div class="menu">
-
-
-                    </div>
-                </div>
-                <div th:fragment="workingSection" id="workingSection">
-                    <div class="ui centered link cards" th:if="${!workingTasks.isEmpty()}">
-                        <div class="card" th:each="workingTask:${workingTasks}" th:id="${workingTask.id}"  >
-
-                            <div class="content">
-                                <a th:if="${workingTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                                <a th:if="${workingTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                                <a th:if="${workingTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                                <div class="header"><i class="attach icon" th:if="${workingTask.attachment!=null}"></i><span th:text="${workingTask.subCategory.title}"></span></div>
-                                <div class="meta">
-                                    <span th:text="${workingTask.subCategory.category.title}"></span> <br/>
-                                    <div th:if="${#locale.getLanguage().equals('en')}">
-                                        <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${workingTask.createdBy.email}"></span>
-                                    </div>
-                                    <div th:if="${#locale.getLanguage().equals('fa')}">
-                                        <span th:text="${workingTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
-                                    </div>
-                                </div>
-                                <div class="description">
-                                    <p th:text="${workingTask.title}"></p>
-                                </div>
-                            </div>
-                            <div class="extra content">
-      <span class="right floated">
-      <span th:text="${workingTask.createdTime.toString().split(' ')[0]}"></span>
-      </span>
-                                <span>
-        <i class="comment icon"></i>
-        <span th:text="${workingTask.comments.size()}"></span> <span th:if="${workingTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${workingTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
+                                <span th:text="${unassignedTask.comments.size()}"></span> <span
+                                        th:if="${unassignedTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${unassignedTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
       </span>
                             </div>
                         </div>
@@ -802,27 +507,33 @@ $(document).ready(function () {
                 <div class="ui floating dropdown" id="sortby">
                     <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" id="1"><span th:text="#{operator.index.sort.newest.title}"></span> </div>
-                        <div class="item" id="2"><span th:text="#{operator.index.sort.priority.title}"></span> </div>
+                        <div class="item" id="1"><span th:text="#{operator.index.sort.newest.title}"></span></div>
+                        <div class="item" id="2"><span th:text="#{operator.index.sort.priority.title}"></span></div>
 
                     </div>
                 </div>
-                <div th:fragment="pendingFragmentFa" id="pendingSection" >
+                <div th:fragment="pendingFragmentEn" id="pendingSection">
                     <div class="ui centered link cards" th:if="${!pendingTasks.isEmpty()}">
                         <div class="card" th:each="pendingTask:${pendingTasks}" th:id="${pendingTask.id}">
 
                             <div class="content">
-                                <a th:if="${pendingTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                                <a th:if="${pendingTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                                <a th:if="${pendingTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                                <div class="header"><i class="attach icon" th:if="${pendingTask.attachment!=null}"></i><span th:text="${pendingTask.subCategory.title}"></span></div>
+                                <a th:if="${pendingTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${pendingTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${pendingTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><span th:text="${pendingTask.subCategory.title}"></span><i
+                                        class="attach icon" th:if="${pendingTask.attachment!=null}"></i></div>
                                 <div class="meta">
                                     <span th:text="${pendingTask.subCategory.category.title}"></span> <br/>
                                     <div th:if="${#locale.getLanguage().equals('en')}">
-                                        <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${pendingTask.createdBy.email}"></span>
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${pendingTask.createdBy.email}"></span>
                                     </div>
                                     <div th:if="${#locale.getLanguage().equals('fa')}">
-                                        <span th:text="${pendingTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
+                                        <span th:text="${pendingTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
                                     </div>
                                 </div>
                                 <div class="description">
@@ -835,7 +546,351 @@ $(document).ready(function () {
       </span>
                                 <span>
         <i class="comment icon"></i>
-                                <span th:text="${pendingTask.comments.size()}"></span> <span th:if="${pendingTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${pendingTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
+                                <span th:text="${pendingTask.comments.size()}"></span> <span
+                                        th:if="${pendingTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${pendingTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
+      </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="one wide column"></div>
+            <div class="three wide column">
+                <h4 class="ui icon header" style="display: block">
+
+                    <i class=" hourglass half icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.status.working}"></span>
+
+                    </div>
+                </h4>
+                <div class="ui invisible floating dropdown">
+                    sort by <i class="dropdown icon"></i>
+                    <div class="menu">
+
+
+                    </div>
+                </div>
+                <div th:fragment="workingSection" id="workingSection">
+                    <div class="ui centered link cards" th:if="${!workingTasks.isEmpty()}">
+                        <div class="card" th:each="workingTask:${workingTasks}" th:id="${workingTask.id}">
+
+                            <div class="content">
+                                <a th:if="${workingTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${workingTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${workingTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><span th:text="${workingTask.subCategory.title}"></span><i
+                                        class="attach icon" th:if="${workingTask.attachment!=null}"></i></div>
+                                <div class="meta">
+                                    <span th:text="${workingTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${workingTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${workingTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <p th:text="${workingTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+      <span class="right floated">
+      <span th:text="${workingTask.createdTime.toString().split(' ')[0]}"></span>
+      </span>
+                                <span>
+        <i class="comment icon"></i>
+        <span th:text="${workingTask.comments.size()}"></span> <span th:if="${workingTask.comments.size()>1}"
+                                                                     th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${workingTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
+      </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="one wide column"></div>
+            <div class="three wide column">
+                <h4 class="ui icon header" style="display: block">
+
+                    <i class=" hourglass end icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.status.done}"></span>
+
+                    </div>
+                </h4>
+                <div class="ui invisible floating dropdown">
+                    sort by <i class="dropdown icon"></i>
+                    <div class="menu">
+
+
+                    </div>
+                </div>
+                <div th:fragment="doneSection" id="doneSection">
+
+
+                    <div class="ui centered link cards" th:if="${!doneTasks.isEmpty()}">
+                        <div class="card" th:each="doneTask:${doneTasks}" th:id="${doneTask.id}">
+
+                            <div class="content">
+                                <a th:if="${doneTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${doneTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${doneTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><span th:text="${doneTask.subCategory.title}"></span><i
+                                        class="attach icon" th:if="${doneTask.attachment!=null}"></i></div>
+                                <div class="meta">
+                                    <span th:text="${doneTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${doneTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${doneTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="description">
+                                    <p th:text="${doneTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+      <span class="right floated">
+       <span th:text="${doneTask.createdTime.toString().split(' ')[0]}"></span>
+      </span>
+                                <span>
+        <i class="comment icon"></i>
+                                <span th:text="${doneTask.comments.size()}"></span>  <span
+                                        th:if="${doneTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${doneTask.comments.size()<=1}"
+                                        th:text="#{admin.index.comment.title}"></span>
+      </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row" th:if="${#locale.getLanguage().equals('fa')}">
+
+
+            <div class="three wide column">
+                <h4 class="ui icon header" style="display: block">
+
+                    <i class=" hourglass end icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.status.done}"></span>
+
+                    </div>
+                </h4>
+                <div class="ui invisible floating dropdown">
+                    sort by <i class="dropdown icon"></i>
+                    <div class="menu">
+
+
+                    </div>
+                </div>
+                <div th:fragment="doneSection" id="doneSection">
+
+
+                    <div class="ui centered link cards" th:if="${!doneTasks.isEmpty()}">
+                        <div class="card" th:each="doneTask:${doneTasks}" th:id="${doneTask.id}">
+
+                            <div class="content">
+                                <a th:if="${doneTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${doneTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${doneTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><i class="attach icon"
+                                                       th:if="${doneTask.attachment!=null}"></i><span
+                                        th:text="${doneTask.subCategory.title}"></span></div>
+                                <div class="meta">
+                                    <span th:text="${doneTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${doneTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${doneTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="description">
+                                    <p th:text="${doneTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+      <span class="right floated">
+       <span th:text="${doneTask.createdTime.toString().split(' ')[0]}"></span>
+      </span>
+                                <span>
+        <i class="comment icon"></i>
+                                <span th:text="${doneTask.comments.size()}"></span>  <span
+                                        th:if="${doneTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${doneTask.comments.size()<=1}"
+                                        th:text="#{admin.index.comment.title}"></span>
+      </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="one wide column"></div>
+            <div class="three wide column">
+                <h4 class="ui icon header" style="display: block">
+
+                    <i class=" hourglass half icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.status.working}"></span>
+
+                    </div>
+                </h4>
+                <div class="ui invisible floating dropdown">
+                    sort by <i class="dropdown icon"></i>
+                    <div class="menu">
+
+
+                    </div>
+                </div>
+                <div th:fragment="workingSection" id="workingSection">
+                    <div class="ui centered link cards" th:if="${!workingTasks.isEmpty()}">
+                        <div class="card" th:each="workingTask:${workingTasks}" th:id="${workingTask.id}">
+
+                            <div class="content">
+                                <a th:if="${workingTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${workingTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${workingTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><i class="attach icon"
+                                                       th:if="${workingTask.attachment!=null}"></i><span
+                                        th:text="${workingTask.subCategory.title}"></span></div>
+                                <div class="meta">
+                                    <span th:text="${workingTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${workingTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${workingTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <p th:text="${workingTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+      <span class="right floated">
+      <span th:text="${workingTask.createdTime.toString().split(' ')[0]}"></span>
+      </span>
+                                <span>
+        <i class="comment icon"></i>
+        <span th:text="${workingTask.comments.size()}"></span> <span th:if="${workingTask.comments.size()>1}"
+                                                                     th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${workingTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
+      </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="one wide column"></div>
+            <div class="three wide column">
+
+                <h4 class="ui icon header" style="display: block">
+
+                    <i class="hourglass start icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.status.pending}"></span>
+
+                    </div>
+                </h4>
+                <div class="ui floating dropdown" id="sortby">
+                    <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" id="1"><span th:text="#{operator.index.sort.newest.title}"></span></div>
+                        <div class="item" id="2"><span th:text="#{operator.index.sort.priority.title}"></span></div>
+
+                    </div>
+                </div>
+                <div th:fragment="pendingFragmentFa" id="pendingSection">
+                    <div class="ui centered link cards" th:if="${!pendingTasks.isEmpty()}">
+                        <div class="card" th:each="pendingTask:${pendingTasks}" th:id="${pendingTask.id}">
+
+                            <div class="content">
+                                <a th:if="${pendingTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${pendingTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${pendingTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><i class="attach icon"
+                                                       th:if="${pendingTask.attachment!=null}"></i><span
+                                        th:text="${pendingTask.subCategory.title}"></span></div>
+                                <div class="meta">
+                                    <span th:text="${pendingTask.subCategory.category.title}"></span> <br/>
+                                    <div th:if="${#locale.getLanguage().equals('en')}">
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${pendingTask.createdBy.email}"></span>
+                                    </div>
+                                    <div th:if="${#locale.getLanguage().equals('fa')}">
+                                        <span th:text="${pendingTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <p th:text="${pendingTask.title}"></p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+      <span class="right floated">
+        <span th:text="${pendingTask.createdTime.toString().split(' ')[0]}"></span>
+      </span>
+                                <span>
+        <i class="comment icon"></i>
+                                <span th:text="${pendingTask.comments.size()}"></span> <span
+                                        th:if="${pendingTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${pendingTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
       </span>
                             </div>
                         </div>
@@ -855,30 +910,37 @@ $(document).ready(function () {
 
                     </div>
                 </h4>
-                <div class="ui invisible floating dropdown" >
+                <div class="ui invisible floating dropdown">
                     <span th:text="#{operator.index.sort.title}"></span> <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" ><span th:text="#{operator.index.sort.newest.title}"></span> </div>
-                        <div class="item" ><span th:text="#{operator.index.sort.priority.title}"></span> </div>
+                        <div class="item"><span th:text="#{operator.index.sort.newest.title}"></span></div>
+                        <div class="item"><span th:text="#{operator.index.sort.priority.title}"></span></div>
 
                     </div>
                 </div>
-                <div  id="unAssignedSection" th:fragment="unassignedFragmentFa">
+                <div id="unAssignedSection" th:fragment="unassignedFragmentFa">
                     <div class="ui centered link cards" th:if="${!unassignedTasks.isEmpty()}">
-                        <div class="card"  th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
+                        <div class="card" th:each="unassignedTask:${unassignedTasks}" th:id="${unassignedTask.id}">
 
                             <div class="content">
-                                <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span th:text="#{operator.index.priority.high}"></span> </a>
-                                <a th:if="${unassignedTask.priority==2}" class="ui yellow ribbon label"><span th:text="#{operator.index.priority.medium}"></span> </a>
-                                <a th:if="${unassignedTask.priority==1}" class="ui olive ribbon label"><span th:text="#{operator.index.priority.low}"></span> </a>
-                                <div class="header"><i class="attach icon" th:if="${unassignedTask.attachment!=null}"></i><span th:text="${unassignedTask.subCategory.title}"></span></div>
+                                <a th:if="${unassignedTask.priority==3}" class="ui red ribbon label"><span
+                                        th:text="#{operator.index.priority.high}"></span> </a>
+                                <a th:if="${unassignedTask.priority==2}" class="ui yellow ribbon label"><span
+                                        th:text="#{operator.index.priority.medium}"></span> </a>
+                                <a th:if="${unassignedTask.priority==1}" class="ui olive ribbon label"><span
+                                        th:text="#{operator.index.priority.low}"></span> </a>
+                                <div class="header"><i class="attach icon"
+                                                       th:if="${unassignedTask.attachment!=null}"></i><span
+                                        th:text="${unassignedTask.subCategory.title}"></span></div>
                                 <div class="meta">
                                     <span th:text="${unassignedTask.subCategory.category.title}"></span> <br/>
                                     <div th:if="${#locale.getLanguage().equals('en')}">
-                                        <span th:text="#{operator.index.assignee.title}"></span> <span th:text="${unassignedTask.createdBy.email}"></span>
+                                        <span th:text="#{operator.index.assignee.title}"></span> <span
+                                            th:text="${unassignedTask.createdBy.email}"></span>
                                     </div>
                                     <div th:if="${#locale.getLanguage().equals('fa')}">
-                                        <span th:text="${unassignedTask.createdBy.email}"></span>  <span th:text="#{operator.index.assignee.title}"></span>
+                                        <span th:text="${unassignedTask.createdBy.email}"></span> <span
+                                            th:text="#{operator.index.assignee.title}"></span>
                                     </div>
                                 </div>
                                 <div class="description">
@@ -891,7 +953,11 @@ $(document).ready(function () {
       </span>
                                 <span>
         <i class="comment icon"></i>
-                                <span th:text="${unassignedTask.comments.size()}"></span> <span th:if="${unassignedTask.comments.size()>1}" th:text="#{operator.index.comments.title}"></span> <span th:if="${unassignedTask.comments.size()<=1}" th:text="#{operator.index.comment.title}"></span>
+                                <span th:text="${unassignedTask.comments.size()}"></span> <span
+                                        th:if="${unassignedTask.comments.size()>1}"
+                                        th:text="#{operator.index.comments.title}"></span> <span
+                                        th:if="${unassignedTask.comments.size()<=1}"
+                                        th:text="#{operator.index.comment.title}"></span>
       </span>
                             </div>
                         </div>

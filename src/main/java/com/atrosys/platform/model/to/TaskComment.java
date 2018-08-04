@@ -28,6 +28,11 @@ public class TaskComment {
     @Column(name = "created_time")
     Timestamp createdTime;
 
+
+    @Column(name = "access_of_client")
+    Boolean accessOfClient;
+
+
     public int getId() {
         return id;
     }
@@ -67,4 +72,14 @@ public class TaskComment {
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
     }
+
+
+    public Boolean getAccessOfClient() {
+        return accessOfClient;
+    }
+
+    public void setAccessOfClient(Boolean accessOfClient) {
+        this.accessOfClient = accessOfClient;
+    }
+
 }

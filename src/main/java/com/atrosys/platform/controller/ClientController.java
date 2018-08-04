@@ -4,6 +4,7 @@ import com.atrosys.platform.TestJob;
 import com.atrosys.platform.model.bl.UserManager;
 import com.atrosys.platform.model.service.*;
 import com.atrosys.platform.model.to.Task;
+import com.atrosys.platform.model.to.TaskComment;
 import com.atrosys.platform.model.to.TaskHistory;
 import com.atrosys.platform.model.to.User;
 import com.atrosys.platform.storage.StorageService;
@@ -45,10 +46,11 @@ public class ClientController {
     UserManager userManager;
     @Autowired
     Scheduler scheduler;
+    @Autowired
+    TaskCommentService taskCommentService;
 
 
     Task selectedTask;
-
 
 
     private final StorageService storageService;
@@ -141,7 +143,6 @@ public class ClientController {
     public ModelAndView addTask(@RequestParam("file") MultipartFile file, @ModelAttribute Task task) {
 
 
-
         ModelAndView view = new ModelAndView();
 
         User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
@@ -206,15 +207,56 @@ public class ClientController {
         return view;
     }
 
+    @PostMapping(value = "/client/task/comment={message}")
+    public ModelAndView addComment(@PathVariable("message") String message){
+        ModelAndView view = new ModelAndView();
+        User user = userManager.getCurrentUser(SecurityContextHolder.getContext());
+        TaskComment comment = new TaskComment();
+        comment.setAccessOfClient(true);
+        comment.setCreatedBy(user);
+        comment.setMessage(message);
+        comment.setCreatedTime(new Timestamp(System.currentTimeMillis()));
+        List<TaskComment> comments = selectedTask.getComments();
+        comments.add(taskCommentService.saveTaskComment(comment));
+        selectedTask.setComments(comments);
+        selectedTask = taskService.save(selectedTask);
+        view.addObject("task",selectedTask);
+        view.setViewName("client/task::commentsFragment");
+        return view;
 
-    @RequestMapping(value ="/client/taskv", method = RequestMethod.GET)
-    public ModelAndView showTask(@RequestParam("id") long id){
+    }
+
+
+    @RequestMapping(value = "/client/task/finish", method = RequestMethod.GET)
+    public ModelAndView finishTask(@RequestParam("id") long id) {
 
         ModelAndView modelAndView = new ModelAndView();
-        Task task = taskService.findTaskById((int)id);
-        modelAndView.addObject("task" , task);
-        modelAndView.setViewName("client/taskv");
-        modelAndView.addObject("subcategory",task.getSubCategory());
+        List<TaskComment>  comments = taskCommentService.findAll();
+        Task task = taskService.findTaskById((int) id);
+        task.setStatus(2);//set as finished
+        selectedTask = task;
+        taskService.save(selectedTask);
+
+//        modelAndView.addObject("comments",comments);
+//        modelAndView.addObject("task", task);
+//        modelAndView.setViewName("client/index");
+//        modelAndView.addObject("subcategory", task.getSubCategory());
+//        selectedTask\
+        modelAndView.setViewName("redirect:/client/index");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/client/task", method = RequestMethod.GET)
+    public ModelAndView showTask(@RequestParam("id") long id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        List<TaskComment>  comments = taskCommentService.findAll();
+        Task task = taskService.findTaskById((int) id);
+        selectedTask = task;
+        modelAndView.addObject("comments",comments);
+        modelAndView.addObject("task", task);
+        modelAndView.setViewName("client/task");
+        modelAndView.addObject("subcategory", task.getSubCategory());
 //        selectedTask\
         return modelAndView;
     }

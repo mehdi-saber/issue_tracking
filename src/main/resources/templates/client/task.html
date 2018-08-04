@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Client Page</title>
+    <div th:if="${#locale.getLanguage().equals('fa')}" th:include="client/fragment/header :: header_fa"></div>
+    <div th:if="${#locale.getLanguage().equals('en')}" th:include="client/fragment/header :: header"></div>
+    <style>
+        moein {
+            color: red
+        }
+    </style>
+</head>
+<body class="atro">
+<header class="atroheader">
+    <div th:include="client/fragment/header :: menu"></div>
+</header>
+<div class="atrocontent">
+    <div class="ui centered grid">
+        <div class="row">
+            <div class="five wide column"></div>
+            <div class="six wide column" th:fragment="taskDetails" id="taskDetails">
+
+                <!--<form class="ui form" th:action="@{index}" id="taskForm" th:method="post" th:if="${task!=null}"-->
+                <!--th:object="${task}">-->
+                <h2 class="ui icon header" style="display: block">
+
+                    <i class="tasks icon"></i>
+
+
+                    <div class="content">
+                        <span th:text="#{operator.index.task.details}"></span>
+
+                    </div>
+                </h2>
+                <div class="ui raised piled segment">
+                    <h4 class="ui dividing header"><span th:text="#{operator.index.task.information}"></span></h4>
+
+                    <div class="field">
+                        <h4><span th:text="#{operator.index.category.title}"></span></h4>
+                        <span th:text="${task.subCategory.category.title}"></span>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="field" th:fragment="subcategory" id="subcategory">
+                        <h4><span th:text="#{operator.index.subject.title}"></span></h4>
+                        <span th:text="${task.subCategory.title}"></span>
+                    </div>
+                    <br>
+                    <br>
+
+
+                    <div class="field" id="subject">
+                        <h4><span th:text="#{client.tasks.select.subject.title}"></span></h4>
+                        <span th:text="${task.title}"></span>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="field" id="description">
+                        <h4><span th:text="#{operator.index.description.title}"></span></h4>
+                        <span th:text="${task.content}"></span>
+                    </div>
+                    <br>
+                    <br>
+                    <a class="ui red labeled icon submit button" style="float: left"
+                       th:href="@{/client/task/finish(id=${task.id})}">
+                        <i class="question icon"></i><span th:text="#{operator.task.set.finished}">
+
+                    </span></a>
+
+
+                </div>
+            </div>
+            <div class="five wide column"></div>
+        </div>
+        <div class="row">
+            <div class="five wide column"></div>
+            <div class="six wide column">
+                <div class="ui raised segment" th:if="${task!=null}">
+                    <div class="ui comments" th:object="${task}" th:fragment="commentsFragment" id="commentsDetails">
+
+
+                        <div class="comment" th:if="${task.comments!=null && task.comments.size()>0} "
+                             th:each="comment:${task.comments}">
+
+                            <a th:if="${comment.accessOfClient} == true" class="avatar">
+                                <img th:src="@{/img/avatar.svg}">
+                            </a>
+                            <div th:if="${#locale.getLanguage().equals('fa')} and ${comment.accessOfClient} == true" class="content">
+                                <div class="metadata">
+                                    <div class="date"><span th:text="${comment.createdTime}"></span></div>
+                                </div>
+                                <a class="author"><span th:text="${comment.createdBy.email}"></span></a>
+
+                                <div class="text">
+                                    <p th:text="${comment.message}"></p>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                <form class="ui reply form">
+                    <div class="field">
+                        <textarea id="commentTextArea" style="min-height: 6em;height: 80px"></textarea>
+                    </div>
+                    <div class="ui primary  labeled icon button" id="addComment">
+                        <i class="icon edit"></i> <span th:text="#{operator.index.addComment.button.title}"></span>
+                    </div>
+                </form>
+                </div>
+
+            </div>
+                <div class="five wide column"></div>
+        </div>
+    </div>
+
+</div>
+    <footer class="atrofooter">
+        <div th:include="client/fragment/footer :: footer"></div>
+    </footer>
+
+
+
+
+    <script type="text/javascript">
+
+
+
+            $('#addComment ').click(function () {
+                console.log("oomad");
+                if ($('#commentTextArea').val()!=''){
+                    $.ajax({
+                        url: "task/comment="+$('#commentTextArea').val(),
+                        type: "POST",
+                        dataType: "html",
+                        success: function (data) {
+
+                            $('#commentsDetails').html(data);
+
+                            $('#commentTextArea').val('');
+
+                        },
+                        error: function (xhr, status) {
+                            alert(status);
+                        },
+                        complete: function (xhr, status) {
+
+                        }
+                    });
+                }
+            })
+
+    </script>
+
+
+
+
+
+
+    <!--<script>-->
+
+    <!--function addComment() {-->
+    <!--$('#addComment ').click(function () {-->
+    <!--if ($('#commentTextArea').val() != '') {-->
+    <!--$.ajax({-->
+    <!--url: "index/comment=" + $('#commentTextArea').val(),-->
+
+    <!--type: "POST",-->
+    <!--dataType: "html",-->
+    <!--success: function (data) {-->
+
+    <!--$('#commentsDetails').html(data);-->
+
+    <!--$('#commentTextArea').val('');-->
+
+    <!--},-->
+    <!--error: function (xhr, status) {-->
+    <!--alert(status);-->
+    <!--},-->
+    <!--complete: function (xhr, status) {-->
+
+    <!--}-->
+    <!--});-->
+    <!--}-->
+    <!--})-->
+
+    <!--</script>-->
+
+    <!--}-->
+
+
+</body>
+</html>

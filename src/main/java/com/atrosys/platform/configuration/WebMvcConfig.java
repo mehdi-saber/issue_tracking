@@ -1,4 +1,5 @@
 package com.atrosys.platform.configuration;
+
 import com.atrosys.platform.converter.UserListConverter;
 import com.atrosys.platform.model.bl.UserManager;
 import com.atrosys.platform.model.service.*;
@@ -27,30 +28,54 @@ import java.util.Locale;
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 
+
+    @Bean
+    TaskCommentService taskCommentService(){
+        return new TaskCommentServiceImpl();
+    }
+
+
+
     @Bean
     UserService userService() {
         return new UserServiceImpl();
     }
-    @Bean public UserManager userManager(){
-        return new UserManager(userService(),daysService(),roleService(),taskService());
-    }
+
     @Bean
-    DaysService daysService(){return new DaysServiceImpl();}
-@Bean RoleService roleService(){return new RoleServiceImpl();}
-@Bean TaskService taskService(){return new TaskServiceImpl();}
+    public UserManager userManager() {
+        return new UserManager(userService(), daysService(), roleService(), taskService());
+    }
+
+    @Bean
+    DaysService daysService() {
+        return new DaysServiceImpl();
+    }
+
+    @Bean
+    RoleService roleService() {
+        return new RoleServiceImpl();
+    }
+
+    @Bean
+    TaskService taskService() {
+        return new TaskServiceImpl();
+    }
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public LocaleResolver localeResolver(){
+    public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(Locale.forLanguageTag("fa"));
-        return  localeResolver;
+        return localeResolver;
     }
+
     @Bean
-    public Scheduler scheduler(){
+    public Scheduler scheduler() {
         SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
 
         Scheduler sched = null;
@@ -64,14 +89,16 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
         return sched;
     }
+
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         return localeChangeInterceptor;
     }
+
     @Override
-    public void addInterceptors(InterceptorRegistry registry){
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
@@ -92,10 +119,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
                         "classpath:/static/font/",
                         "classpath:/static/js/");
     }
+
     @Override
-    public void addFormatters (FormatterRegistry registry) {
+    public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new UserListConverter());
     }
+
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();

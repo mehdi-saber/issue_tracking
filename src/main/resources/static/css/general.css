@@ -91,3 +91,16 @@
     }
 }
 
+
+
+/*moein added this CSSs*/
+.footer1 {
+    position: fixed!important;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    /*width: 100vw;*/
+    background-color: black;
+    color: white;
+    text-align: center;
+}
